@@ -111,6 +111,16 @@ export class AudioEngine {
     this.onChange();
   }
 
+  /** Retry after a failed download: on success the enabled sound state is fully restored. */
+  async retry() {
+    await this.load();
+    if (this.state === 'ready' && this.prefs.enabled && !this.hidden) {
+      await this.ctx?.resume().catch(() => undefined);
+      this.startMusic(); // guarded: never starts a second looping source
+      this.onChange();
+    }
+  }
+
   private startMusic() {
     if (!this.ctx || !this.musicGain || this.music || this.state !== 'ready' || !this.prefs.enabled) return;
     const b = this.buffers.get('seedlight');

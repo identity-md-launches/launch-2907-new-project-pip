@@ -67,8 +67,14 @@ export interface ChainEvent {
 }
 
 const H32 = /^0x[\da-f]{64}$/i;
-export const identity = (e: { chainId: number; transactionHash: string; logIndex: number }) =>
-  `${e.chainId}:${e.transactionHash.toLowerCase()}:${e.logIndex}`;
+/**
+ * Replay identity: chain + transaction + the verified event identifier (requestId for a request,
+ * settledThroughRound for a settlement). Unlike the block-global logIndex this does not change when a
+ * reorg re-includes the same transaction behind a different number of earlier logs. Block hash and
+ * logIndex are kept on the record separately to track the canonical occurrence.
+ */
+export const identity = (e: { chainId: number; transactionHash: string; type: string; identifier: string }) =>
+  `${e.chainId}:${e.transactionHash.toLowerCase()}:${e.type}:${e.identifier.toLowerCase()}`;
 
 /** Strict decode: wrong chain, wrong emitter, malformed provenance or a non-matching ABI throws. */
 export function decodeLog(c: SourceConfig, chainId: number, log: RawLog, now: number): ChainEvent {

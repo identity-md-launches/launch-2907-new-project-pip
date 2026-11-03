@@ -18,6 +18,7 @@ interface Props {
   mode: 'pet' | 'turn';
   setMode: (m: 'pet' | 'turn') => void;
   onTouch: (part: Part, gesture: Gesture) => void;
+  onClipEnd: (name: string) => void;
   tryFeed: (food: FoodId) => boolean;
   cards: FloatCard[];
   dismissCard: (id: string) => void;
@@ -35,6 +36,8 @@ export function Stage(p: Props) {
   const [drag, setDrag] = useState<{ food: FoodId; x: number; y: number; near: number } | null>(null);
   const cbRef = useRef(p.onTouch);
   cbRef.current = p.onTouch;
+  const endRef = useRef(p.onClipEnd);
+  endRef.current = p.onClipEnd;
 
   useEffect(() => {
     const c = canvasRef.current!;
@@ -48,6 +51,7 @@ export function Stage(p: Props) {
       setLoad('nogl');
       return;
     }
+    scene.onClipEnd = (name) => endRef.current(name);
     p.sceneRef.current = scene;
     (window as unknown as { __pip?: PetScene }).__pip = scene; // test hook (read-only use in e2e)
     return () => {
@@ -65,6 +69,29 @@ export function Stage(p: Props) {
   }, [p.modelUrl, p.stage, loadKey, p.sceneRef]);
 
   useEffect(() => p.sceneRef.current?.setMode(p.mode), [p.mode, p.sceneRef]);
+
+  // Measure the overlay controls so Pip is framed in the free band between them (feet stay
+  // touchable above the meters) and the card stack never extends over the meters or snacks.
+  const stageRef = useRef<HTMLElement>(null);
+  const topRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const st = stageRef.current;
+    const top = topRef.current;
+    const bottom = bottomRef.current;
+    if (!st || !top || !bottom) return;
+    const measure = () => {
+      const topInset = top.offsetTop + top.offsetHeight;
+      const bottomInset = st.clientHeight - bottom.offsetTop;
+      st.style.setProperty('--top-inset', `${topInset}px`);
+      st.style.setProperty('--bottom-inset', `${bottomInset}px`);
+      p.sceneRef.current?.setInsets(topInset, bottomInset);
+    };
+    const ro = new ResizeObserver(measure);
+    [st, top, bottom].forEach((el) => ro.observe(el));
+    measure();
+    return () => ro.disconnect();
+  }, [p.sceneRef, load]);
 
   // ---- snack dragging to the live mouth socket ----------------------------------------------
   const dragRef = useRef<{ food: FoodId; id: number } | null>(null);
@@ -109,7 +136,7 @@ export function Stage(p: Props) {
 
   const pct = (n: number) => `${Math.round(n)}%`;
   return (
-    <section className="stage" aria-label={p.t('appTitle')}>
+    <section className="stage" ref={stageRef} aria-label={p.t('appTitle')}>
       <canvas ref={canvasRef} className="pet-canvas" data-mode={p.mode} aria-label={p.t('modeHint')} role="img" />
       {load !== 'ok' && (
         <div className="stage-msg" role="status">
@@ -125,7 +152,7 @@ export function Stage(p: Props) {
           )}
         </div>
       )}
-      <div className="stage-top">
+      <div className="stage-top" ref={topRef}>
         <div className="seg" role="group" aria-label={p.t('modeHint')}>
           {(['pet', 'turn'] as const).map((m) => (
             <button key={m} className="seg-btn" aria-pressed={p.mode === m} onClick={() => p.setMode(m)}>
@@ -168,7 +195,7 @@ export function Stage(p: Props) {
           </li>
         ))}
       </ol>
-      <div className="stage-bottom">
+      <div className="stage-bottom" ref={bottomRef}>
         <dl className="bars">
           {(['bond', 'energy', 'fullness'] as const).map((k) => (
             <div key={k} className="bar">

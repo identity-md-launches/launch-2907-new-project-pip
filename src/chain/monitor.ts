@@ -46,12 +46,25 @@ export class PublicRPC {
   }
 }
 
+export type ErrorCode = '' | 'rpc' | 'chain' | 'code' | 'upgraded' | 'notyet' | 'block';
+/** Maps internal failure messages to translation codes (err_*), so raw English never reaches the UI. */
+export function errorCode(message: string): ErrorCode {
+  if (!message) return '';
+  if (/chain mismatch/i.test(message)) return 'chain';
+  if (/upgraded/i.test(message)) return 'upgraded';
+  if (/code mismatch|no code/i.test(message)) return 'code';
+  if (/not yet confirmed/i.test(message)) return 'notyet';
+  if (/canonical block/i.test(message)) return 'block';
+  return 'rpc';
+}
+
 export type Status = 'off' | 'connecting' | 'watching' | 'stale' | 'unavailable' | 'paused';
 
 export interface Snapshot {
   source: SourceConfig['key'];
   status: Status;
   error: string;
+  errorCode: ErrorCode;
   head: number | null;
   safe: number | null;
   lastOkAt: number | null;
@@ -72,7 +85,7 @@ export interface RPCLike {
 
 /**
  * Polls one source. Only blocks at least `confirmations` deep are read. Each log has a canonical
- * identity (chain, transaction, log index) and is played at most once per page session even if a
+ * identity (chain, transaction, verified event identifier) and is played at most once per page session even if a
  * reorg removes and re-includes it. Failures back off exponentially and leave data visibly stale.
  */
 export class ChainMonitor {
@@ -103,7 +116,7 @@ export class ChainMonitor {
     const now = this.clock();
     let status = this.status;
     if (status === 'watching' && this.lastOkAt !== null && now - this.lastOkAt > POLICY.staleAfterMs) status = 'stale';
-    return { source: this.config.key, status, error: this.error, head: this.head, safe: this.safe, lastOkAt: this.lastOkAt, wheel: this.wheel, history: this.history };
+    return { source: this.config.key, status, error: this.error, errorCode: errorCode(this.error), head: this.head, safe: this.safe, lastOkAt: this.lastOkAt, wheel: this.wheel, history: this.history };
   }
 
   start() {
@@ -128,6 +141,11 @@ export class ChainMonitor {
       this.nextAt = 0;
       this.hooks.onChange();
     }
+  }
+  /** Re-reads status through a method so TypeScript does not keep the pre-await narrowing. */
+  private halted(): boolean {
+    const s: Status = this.status;
+    return s === 'off' || s === 'paused';
   }
   due() {
     return this.status !== 'off' && this.status !== 'paused' && !this.busy && this.clock() >= this.nextAt;
@@ -230,7 +248,8 @@ export class ChainMonitor {
           const id = identity(e);
           if (this.seen.includes(id)) {
             const old = this.history.find((h) => identity(h) === id);
-            if (old) Object.assign(old, { status: 'confirmed', blockHash: e.blockHash, blockNumber: e.blockNumber });
+            // Re-inclusion after a reorg: update the canonical occurrence, never replay the reaction.
+            if (old) Object.assign(old, { status: 'confirmed', blockHash: e.blockHash, blockNumber: e.blockNumber, logIndex: e.logIndex });
             continue;
           }
           this.seen = [...this.seen, id].slice(-POLICY.seen);
@@ -243,13 +262,14 @@ export class ChainMonitor {
       }
       this.failures = 0;
       this.error = '';
-      this.status = 'watching';
+      // stop()/pause() may have run while this poll was awaiting; do not override them.
+      if (!this.halted()) this.status = 'watching';
       this.lastOkAt = this.clock();
       this.nextAt = this.clock() + POLICY.pollMs;
     } catch (e) {
       this.failures++;
       this.error = (e as Error).message || 'RPC error';
-      if (this.status !== 'off' && this.status !== 'paused') this.status = this.lastOkAt ? 'stale' : 'unavailable';
+      if (!this.halted()) this.status = this.lastOkAt ? 'stale' : 'unavailable';
       if (/mismatch|upgraded|no code/.test(this.error)) this.verified = false;
       this.nextAt = this.clock() + Math.min(POLICY.maxBackoffMs, POLICY.pollMs * 2 ** this.failures);
     } finally {

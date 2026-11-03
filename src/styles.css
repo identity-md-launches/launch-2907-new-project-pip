@@ -328,10 +328,17 @@ a {
   padding: 0;
   position: absolute;
   z-index: 4;
-  inset-block-start: 60px;
+  /* Bounded to the free band between the top controls and the meters/snack tray (measured in
+     Stage.tsx), scrolling when several cards arrive at once, so no explanation is clipped and the
+     stack never covers the snacks. */
+  inset-block-start: calc(var(--top-inset, 60px) + var(--s-1));
   inset-inline-end: var(--s-3);
   inline-size: min(300px, calc(100% - 2 * var(--s-3)));
+  max-block-size: calc(100% - var(--top-inset, 60px) - var(--bottom-inset, 160px) - var(--s-2));
+  overflow-y: auto;
+  overscroll-behavior: contain;
   display: grid;
+  align-content: start;
   gap: var(--s-2);
 }
 .card {
@@ -794,9 +801,6 @@ progress {
     flex-direction: column;
     gap: 0;
     min-block-size: 52px;
-  }
-  .cards {
-    inset-block-start: 56px;
   }
 }
 

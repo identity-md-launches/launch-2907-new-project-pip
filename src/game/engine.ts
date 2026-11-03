@@ -314,10 +314,30 @@ export function validate(x: unknown): PipState | null {
   if (d.bond > 100 || d.energy > 100 || d.fullness > 100) return null;
   if (typeof d.asleep !== 'boolean' || !isTime(d.lastFedAt) || !isTime(d.lastPetRewardAt) || !isTime(d.lastGameRewardAt)) return null;
   if (!Array.isArray(d.wishes) || !Array.isArray(d.memories) || typeof d.day !== 'string') return null;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(d.day) || d.bondToday > RULES.dailyBondCap) return null;
+  if (d.updatedAt < d.createdAt || d.growthMs > 400 * DAY) return null;
+  // Every element is checked so a damaged or edited backup can never be committed and later
+  // crash rendering (e.g. wishes: [null]).
+  if (d.wishes.length > WISH_POOL.length) return null;
+  for (const w of d.wishes as unknown[]) {
+    const x = w as { id?: unknown; done?: unknown };
+    if (!x || typeof x !== 'object' || !WISH_POOL.includes(x.id as WishId) || typeof x.done !== 'boolean') return null;
+  }
+  if (new Set(d.wishes.map((w) => w.id)).size !== d.wishes.length) return null;
+  if (d.memories.length > 30) return null;
+  for (const m of d.memories as unknown[]) {
+    const x = m as { id?: unknown; at?: unknown; kind?: unknown };
+    if (!x || typeof x !== 'object' || typeof x.id !== 'string' || x.id.length > 80 || !isNum(x.at) || x.at < 0) return null;
+    if (typeof x.kind !== 'string' || !MEMORY_KIND.test(x.kind)) return null;
+  }
   if (d.accessory !== null && !['bow', 'scarf', 'leaf', 'star'].includes(d.accessory)) return null;
-  if (!d.cooldowns || typeof d.cooldowns !== 'object') return null;
+  if (!d.cooldowns || typeof d.cooldowns !== 'object' || Array.isArray(d.cooldowns)) return null;
+  for (const [k, v] of Object.entries(d.cooldowns)) if (!(k in RULES.care) || !isNum(v) || v < 0) return null;
+  if (d.importedFrom !== null && d.importedFrom !== undefined && typeof d.importedFrom !== 'string') return null;
   return d;
 }
+
+const MEMORY_KIND = /^(hello|imported|surprise|first-(meal|nap|cuddle|brush|ball|dance)|stage-(young|junior|grown|star)|won-(memory|seeds)|wishes-\d{4}-\d{2}-\d{2})$/;
 
 export const LEGACY_KEY = 'squeek-public-pet-v1';
 const LEGACY_STAGE_MS = [0, 1 * DAY, 3 * DAY, 7 * DAY, 21 * DAY];

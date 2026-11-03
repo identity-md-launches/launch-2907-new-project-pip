@@ -108,6 +108,9 @@ export class PetScene {
   private gestures: PointerGestures;
   private resizeObs: ResizeObserver;
   private hidden = false;
+  private insets = { top: 0, bottom: 0 };
+  private modelH = 0.8;
+  private modelW = 0.6;
   mode: 'pet' | 'turn' = 'pet';
   onClipEnd: ((name: string) => void) | null = null;
 
@@ -166,7 +169,7 @@ export class PetScene {
   }
 
   private handleGesture(e: GestureEvent) {
-    if (e.point) this.pokeAt(e.point);
+    if (e.point instanceof THREE.Vector3) this.pokeAt(e.point);
     this.cb.onTouch(e.part, e.gesture);
   }
 
@@ -224,14 +227,39 @@ export class PetScene {
     this.body.add(wrap);
     this.mesh = mesh;
     this.shadow.scale.setScalar((box.max.x - box.min.x) * scale * 1.2);
+    this.modelH = h * scale;
+    this.modelW = Math.max(box.max.x - box.min.x, box.max.z - box.min.z) * scale;
     if (this.accessoryId) this.setAccessory(this.accessoryId);
     this.frame();
   }
 
+  /**
+   * Fits the current growth mesh into the unobstructed band of the canvas: below the stage-top
+   * controls and above the meters/snack tray, whose measured heights Stage passes in (CSS px).
+   * The view offset moves the band's centre without cropping, and raycasting/mouth projection use
+   * the same projection matrix, so touch targets and the mouth socket stay exact.
+   */
+  setInsets(top: number, bottom: number) {
+    this.insets = { top: Math.max(0, top), bottom: Math.max(0, bottom) };
+    this.frame();
+  }
+
   private frame() {
-    const d = 3.1;
-    this.camera.position.set(0, 0.62, d);
-    this.camera.lookAt(0, 0.44, 0);
+    const w = this.canvas.clientWidth || 1;
+    const h = this.canvas.clientHeight || 1;
+    const band = Math.max(h * 0.35, h - this.insets.top - this.insets.bottom);
+    const tan = Math.tan(THREE.MathUtils.degToRad(this.camera.fov) / 2);
+    const H = this.modelH * 1.16; // head-room above the ears, contact shadow below the feet
+    const dV = (H * h) / (band * 2 * tan);
+    const dH = (this.modelW * 1.5) / (2 * tan * (w / h));
+    const d = Math.max(dV, dH, 1.2);
+    const cy = this.modelH * 0.5;
+    this.camera.position.set(0, cy + d * 0.1, d);
+    this.camera.lookAt(0, cy, 0);
+    // Shift the rendered window so the model centre lands on the band centre.
+    const dy = this.insets.top + band / 2 - h / 2;
+    this.camera.setViewOffset(w, h, 0, -dy, w, h);
+    this.camera.updateProjectionMatrix();
   }
 
   private resize() {
@@ -239,9 +267,16 @@ export class PetScene {
     const h = this.canvas.clientHeight || 1;
     this.renderer.setSize(w, h, false);
     this.camera.aspect = w / h;
-    // Keep Pip fully in view on narrow (portrait) screens.
-    this.camera.fov = w / h < 0.8 ? 38 : 30;
-    this.camera.updateProjectionMatrix();
+    this.camera.fov = w / h < 0.8 ? 34 : 28;
+    this.frame();
+  }
+
+  /** Where the feet anchor projects, in client px (used by the layout tests). */
+  feetScreen(): { x: number; y: number } | null {
+    if (!this.mesh || !this.landmarks) return null;
+    const v = this.mesh.localToWorld(this.deformed([0.5, 0.04, 0.8])).project(this.camera);
+    const r = this.canvas.getBoundingClientRect();
+    return { x: r.left + ((v.x + 1) / 2) * r.width, y: r.top + ((1 - v.y) / 2) * r.height };
   }
 
   setMode(m: 'pet' | 'turn') {
@@ -276,7 +311,10 @@ export class PetScene {
     if (!def) return false;
     if (this.asleep && def.priority < 4 && !opts.force) return false;
     if (this.clip && this.clip.priority > def.priority && !opts.force) return false;
+    const replaced = this.clip?.name ?? null;
     this.clip = { name, start: this.t, dur: def.dur, priority: def.priority };
+    // A clip cut short still ends: listeners (e.g. the feeding lock) must hear about it.
+    if (replaced && replaced !== name) this.onClipEnd?.(replaced);
     if (name === 'ball') this.spawnBall();
     return true;
   }

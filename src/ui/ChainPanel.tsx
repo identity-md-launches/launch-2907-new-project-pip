@@ -1,4 +1,4 @@
-import { SOURCES, txURL } from '../chain/config';
+import { networkLabel, SOURCES, txURL } from '../chain/config';
 import type { Snapshot } from '../chain/monitor';
 import type { T } from './types';
 
@@ -36,7 +36,7 @@ export function ChainPanel({
               <span className={`status status-${s.status}`}>{t(`st_${s.status}` as never)}</span>
             </header>
             <p className="small">
-              {c.network} · chain {c.chainId} ·{' '}
+              {networkLabel(c, t)} ·{' '}
               <a href={`${c.explorer}/address/${c.address}`} target="_blank" rel="noopener noreferrer">
                 {c.address.slice(0, 8)}…{c.address.slice(-6)}
               </a>
@@ -47,7 +47,7 @@ export function ChainPanel({
               </a>{' '}
               · {t('confirmations', { n: c.confirmations })}
             </p>
-            {s.error && <p className="small warn">{s.error}</p>}
+            {s.errorCode && <p className="small warn">{t(`err_${s.errorCode}` as never)}</p>}
             {live || stale ? (
               <dl className={`facts${stale ? ' is-stale' : ''}`}>
                 <div>

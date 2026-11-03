@@ -14,7 +14,7 @@ import { ChatPanel } from './ui/ChatPanel';
 import { ChainPanel } from './ui/ChainPanel';
 import { ChatClient, type ChatState } from './chat/client';
 import { ChainMonitor, PublicRPC, type Snapshot } from './chain/monitor';
-import { POLICY, SOURCES, txURL } from './chain/config';
+import { networkLabel, POLICY, SOURCES, txURL } from './chain/config';
 import type { ChainEvent } from './chain/protocol';
 import { AudioEngine, type SoundId } from './audio/audio';
 import { SoundIcon } from './ui/icons';
@@ -22,6 +22,7 @@ import { SoundIcon } from './ui/icons';
 const store = browserStore();
 const BASE = import.meta.env.BASE_URL;
 const CHAIN_PREF = 'pip-rebuild-chain-v1';
+const KEY_GESTURES: Record<string, Gesture> = { KeyH: 'hold', KeyS: 'stroke', KeyT: 'tripleTap' };
 type Tab = 'care' | 'play' | 'chat' | 'chain' | 'more';
 
 function initialLang(): Lang {
@@ -135,14 +136,22 @@ export default function App() {
     if (!applyResult(r)) return false;
     eatingRef.current = true;
     setEating(true);
-    sceneRef.current?.startEating(food);
+    const scene = sceneRef.current;
+    if (scene) scene.startEating(food);
+    // The lock is released only when the scene reports the eat clip ended (onClipEnd below). The
+    // scene clock pauses in a hidden tab and runs slower below 20 fps, so a wall-clock timer would
+    // unlock Nap/care/games while Pip is still nibbling. Without a scene there is no clip to wait for.
+    else window.setTimeout(endEating, 3600);
     sfx('feed');
     setMessage(r.bondGained ? t('ate', { food: t(food), b: r.bondGained }) : t('card_feed', { food: t(food) }));
-    window.setTimeout(() => {
-      eatingRef.current = false;
-      setEating(false);
-    }, 3600);
     return true;
+  };
+  function endEating() {
+    eatingRef.current = false;
+    setEating(false);
+  }
+  const onClipEnd = (name: string) => {
+    if (name === 'eat' && eatingRef.current) endEating();
   };
 
   // ---- touch --------------------------------------------------------------------------------
@@ -210,18 +219,25 @@ export default function App() {
   useEffect(() => sceneRef.current?.setAccessory(preview === null ? view.accessory : STAGES[shownStage].accessory), [view.accessory, preview, shownStage]);
 
   // ---- games --------------------------------------------------------------------------------
-  const gameStart = () => {
+  // Each round gets an id; only the round that holds the lock can finish it and release it.
+  const roundSeq = useRef(0);
+  const activeRound = useRef<number | null>(null);
+  const gameStart = (): number | null => {
     const b = busy();
     if (b) {
       setMessage(b === 'asleep' ? t('r_asleep') : t('r_busy'));
-      return false;
+      return null;
     }
+    const id = ++roundSeq.current;
+    activeRound.current = id;
     gameRef.current = true;
     setGameActive(true);
     sceneRef.current?.play('i_attention');
-    return true;
+    return id;
   };
-  const gameEnd = (g: GameId, won: boolean) => {
+  const gameEnd = (g: GameId, won: boolean, round: number) => {
+    if (activeRound.current !== round) return; // abandoned or superseded round: no unlock, no reward
+    activeRound.current = null;
     gameRef.current = false;
     setGameActive(false);
     const r = finishGame(pipRef.current, g, won, Date.now());
@@ -234,6 +250,7 @@ export default function App() {
   };
   useEffect(() => {
     if (tab !== 'play' && gameRef.current) {
+      activeRound.current = null;
       gameRef.current = false; // leaving the tab abandons the round, no reward
       setGameActive(false);
     }
@@ -290,7 +307,7 @@ export default function App() {
       const tt = tRef.current;
       addCard({
         kind: 'live',
-        chain: `${c.network} · chain ${c.chainId}`,
+        chain: networkLabel(c, tt),
         title: removed ? tt('card_removed') : e.type === 'request' ? tt('card_request') : tt('card_settlement'),
         why: removed ? tt('card_removed_why') : e.type === 'request' ? tt('card_request_why') : tt('card_settlement_why', { n: e.derivedBlocksDelta ?? '?' }),
         confirm: removed ? tt('removed') : tt('confirmed', { n: c.confirmations }),
@@ -341,7 +358,7 @@ export default function App() {
     const c = kind === 'request' ? SOURCES.imd : SOURCES.squeek;
     addCard({
       kind: 'simulated',
-      chain: `${c.network} · chain ${c.chainId}`,
+      chain: networkLabel(c, t),
       title: kind === 'request' ? t('card_request') : t('card_settlement'),
       why: t('card_sim_why'),
     });
@@ -385,6 +402,7 @@ export default function App() {
     };
   }, [audio]);
   const keyParts: Part[] = ['head', 'cheek', 'nose', 'belly', 'paw', 'feet'];
+  const [kbPart, setKbPart] = useState<Part>('head');
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const el = e.target as HTMLElement;
@@ -393,8 +411,19 @@ export default function App() {
         sceneRef.current?.turnBy(e.key === 'ArrowLeft' ? -0.25 : 0.25);
         e.preventDefault();
       }
+      if (e.repeat) return; // a held key is one gesture, not a stream of awards
       const n = Number(e.code.replace('Digit', ''));
-      if (e.code.startsWith('Digit') && n >= 1 && n <= 6) sceneRef.current?.touchPartByKey(keyParts[n - 1], e.shiftKey ? 'stroke' : 'tap');
+      if (e.code.startsWith('Digit') && n >= 1 && n <= 6) {
+        const part = keyParts[n - 1];
+        setKbPart(part);
+        sceneRef.current?.touchPartByKey(part, e.shiftKey ? 'stroke' : 'tap');
+        return;
+      }
+      const g = KEY_GESTURES[e.code];
+      if (g) {
+        e.preventDefault();
+        sceneRef.current?.touchPartByKey(kbPart, g);
+      }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -470,7 +499,7 @@ export default function App() {
                 )}
                 {audio.state === 'failed' && (
                   <p className="small warn" role="alert">
-                    {t('soundFailed')} <button className="link" onClick={() => void audio.load()}>{t('retry')}</button>
+                    {t('soundFailed')} <button className="link" onClick={() => void audio.retry()}>{t('retry')}</button>
                   </p>
                 )}
                 {(['music', 'effects'] as const).map((k) => (
@@ -494,6 +523,7 @@ export default function App() {
           mode={mode}
           setMode={setMode}
           onTouch={onTouch}
+          onClipEnd={onClipEnd}
           tryFeed={tryFeed}
           cards={cards}
           dismissCard={dismissCard}
@@ -551,8 +581,24 @@ export default function App() {
                 <p className="small muted">{t('keyboardHelp')}</p>
                 <div className="actions">
                   {keyParts.map((part) => (
-                    <button key={part} className="btn btn-quiet" onClick={() => sceneRef.current?.touchPartByKey(part, 'tap')}>
+                    <button
+                      key={part}
+                      className="btn btn-quiet"
+                      aria-pressed={kbPart === part}
+                      onClick={() => {
+                        setKbPart(part);
+                        sceneRef.current?.touchPartByKey(part, 'tap');
+                      }}
+                    >
                       {t('touchPart', { part: t(`part_${part}` as Key) })}
+                    </button>
+                  ))}
+                </div>
+                <p className="small muted" aria-live="polite">{t('kbPart', { part: t(`part_${kbPart}` as Key) })}</p>
+                <div className="actions">
+                  {(['hold', 'stroke', 'tripleTap'] as Gesture[]).map((g) => (
+                    <button key={g} className="btn btn-quiet" onClick={() => sceneRef.current?.touchPartByKey(kbPart, g)}>
+                      {t(g === 'hold' ? 'kbHold' : g === 'stroke' ? 'kbStroke' : 'kbTriple')}
                     </button>
                   ))}
                 </div>

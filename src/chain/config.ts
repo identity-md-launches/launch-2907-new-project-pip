@@ -4,7 +4,8 @@
 export interface SourceConfig {
   key: 'imd' | 'squeek';
   chainId: number;
-  network: string; // shown verbatim: never call a testnet "mainnet"
+  network: string; // English record value: never call a testnet "mainnet"
+  networkKind: 'mainnet' | 'testnet'; // selects the translated label (net_mainnet / net_testnet)
   label: string;
   address: `0x${string}`;
   startBlock: number;
@@ -24,6 +25,7 @@ export const SOURCES: Record<'imd' | 'squeek', SourceConfig> = {
     key: 'imd',
     chainId: 1,
     network: 'Ethereum mainnet',
+    networkKind: 'mainnet',
     label: 'IMD Intake',
     address: '0xa43e6f75ee006411f79ac1c84120606c2330de82',
     startBlock: 26164897,
@@ -38,6 +40,7 @@ export const SOURCES: Record<'imd' | 'squeek', SourceConfig> = {
     key: 'squeek',
     chainId: 11155111,
     network: 'Sepolia testnet',
+    networkKind: 'testnet',
     label: 'Squeekchain SqueekCore',
     address: '0x74665daeca35a2303e767e76a2ff1fb6f93e119f',
     startBlock: 11902282,
@@ -66,3 +69,7 @@ export const POLICY = {
 } as const;
 
 export const txURL = (c: SourceConfig, hash: string) => (/^0x[\da-f]{64}$/i.test(hash) ? `${c.explorer}/tx/${hash}` : null);
+
+/** Translation keys for the network line, e.g. "Sepolia testnet · chain 11155111" / "Sepolia 測試網 · 鏈 11155111". */
+export const networkLabel = (c: SourceConfig, t: (k: 'net_mainnet' | 'net_testnet' | 'chainN', v?: Record<string, string | number>) => string) =>
+  `${t(c.networkKind === 'mainnet' ? 'net_mainnet' : 'net_testnet')} · ${t('chainN', { n: c.chainId })}`;
