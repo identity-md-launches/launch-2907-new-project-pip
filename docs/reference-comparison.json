@@ -1,0 +1,125 @@
+{
+  "method": "Decoded original ZIP textures, resized to 1024 square with Sharp Lanczos3, compared in RGB with retained compressed WebP atlases. This is a lossy pixel comparison, not a claim of byte identity to the larger reference.",
+  "results": [
+    {
+      "model": "01-tiny-bean",
+      "referenceMaterial": "tripo_material_9716c3c4-357e-47b5-ba9a-76a6b19ee51d",
+      "comparisons": [
+        {
+          "role": "basecolor",
+          "rmse": 2.635665479733179,
+          "psnr": 39.71299783868509,
+          "referenceMime": "image/jpeg"
+        },
+        {
+          "role": "rm",
+          "rmse": 2.1525318319733837,
+          "psnr": 41.4718119569372,
+          "referenceMime": "image/webp"
+        },
+        {
+          "role": "normal",
+          "rmse": 1.2178837232455133,
+          "psnr": 46.418687083520645,
+          "referenceMime": "image/webp"
+        }
+      ]
+    },
+    {
+      "model": "02-milk-mochi",
+      "referenceMaterial": "tripo_material_c5e53053-7d51-493e-aeaf-caa10f1933f2",
+      "comparisons": [
+        {
+          "role": "basecolor",
+          "rmse": 2.4997606162856694,
+          "psnr": 40.17283517926971,
+          "referenceMime": "image/jpeg"
+        },
+        {
+          "role": "rm",
+          "rmse": 1.9038991972581722,
+          "psnr": 42.53792459360747,
+          "referenceMime": "image/webp"
+        },
+        {
+          "role": "normal",
+          "rmse": 1.188683037648526,
+          "psnr": 46.62948230018146,
+          "referenceMime": "image/webp"
+        }
+      ]
+    },
+    {
+      "model": "03-curious-baby",
+      "referenceMaterial": "tripo_material_147afc16-f609-4ec1-a2ec-443e63716ff1",
+      "comparisons": [
+        {
+          "role": "basecolor",
+          "rmse": 2.6778611019390985,
+          "psnr": 39.575042672155625,
+          "referenceMime": "image/jpeg"
+        },
+        {
+          "role": "rm",
+          "rmse": 1.9399709224815862,
+          "psnr": 42.374899198738845,
+          "referenceMime": "image/webp"
+        },
+        {
+          "role": "normal",
+          "rmse": 1.2981696962422513,
+          "psnr": 45.864174269029945,
+          "referenceMime": "image/webp"
+        }
+      ]
+    },
+    {
+      "model": "04-lively-youngster",
+      "referenceMaterial": "tripo_material_71eb7065-22bf-40c9-9c31-8f145fb9b95a",
+      "comparisons": [
+        {
+          "role": "basecolor",
+          "rmse": 2.4567295813128127,
+          "psnr": 40.323656505182086,
+          "referenceMime": "image/jpeg"
+        },
+        {
+          "role": "rm",
+          "rmse": 2.4304358994836757,
+          "psnr": 40.41712017981477,
+          "referenceMime": "image/webp"
+        },
+        {
+          "role": "normal",
+          "rmse": 1.2599640761406161,
+          "psnr": 46.123640353253414,
+          "referenceMime": "image/webp"
+        }
+      ]
+    },
+    {
+      "model": "05-little-guardian",
+      "referenceMaterial": "tripo_material_8826cb4b-ebaa-419e-a266-9a71858cce36",
+      "comparisons": [
+        {
+          "role": "basecolor",
+          "rmse": 2.593186773099348,
+          "psnr": 39.854127653506296,
+          "referenceMime": "image/jpeg"
+        },
+        {
+          "role": "rm",
+          "rmse": 2.6238432257890105,
+          "psnr": 39.75204595961249,
+          "referenceMime": "image/webp"
+        },
+        {
+          "role": "normal",
+          "rmse": 1.239450185768064,
+          "psnr": 46.26622207060048,
+          "referenceMime": "image/webp"
+        }
+      ]
+    }
+  ]
+}

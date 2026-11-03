@@ -1,12 +1,12 @@
-PASS  390: feet anchor is on the canvas (not under meters) — feet y=390.8
-PASS  390: feet sit above the meters — meters top=428.2
+PASS  390: feet anchor is on the canvas (not under meters) — feet y=408.3
+PASS  390: feet sit above the meters — meters top=463.1
 PASS  390: tapping the feet gives a feet response — You touched Pip’s feet.
 PASS  first touch saved a bond reward — bond 10→11
-PASS  stage 1: model loads and feet are touchable — feet y=409.8 hit=CANVAS
-PASS  stage 2: model loads and feet are touchable — feet y=409.8 hit=CANVAS
-PASS  stage 3: model loads and feet are touchable — feet y=406.1 hit=CANVAS
-PASS  stage 4: model loads and feet are touchable — feet y=405.1 hit=CANVAS
-PASS  stage 5: model loads and feet are touchable — feet y=407.9 hit=CANVAS
+PASS  stage 1: model loads and feet are touchable — feet y=408.3 hit=CANVAS
+PASS  stage 2: model loads and feet are touchable — feet y=427.3 hit=CANVAS
+PASS  stage 3: model loads and feet are touchable — feet y=436.2 hit=CANVAS
+PASS  stage 4: model loads and feet are touchable — feet y=434.7 hit=CANVAS
+PASS  stage 5: model loads and feet are touchable — feet y=438.9 hit=CANVAS
 PASS  no page errors or failed local resources (390)
 PASS  key 3 taps the nose — You touched Pip’s nose.
 PASS  T plays the three-tap surprise
@@ -18,7 +18,7 @@ PASS  drop on the live mouth socket feeds once — hint while near: "Drop at the
 PASS  eat clip plays
 PASS  hidden tab: Nap stays locked while the eat clip is unfinished
 PASS  lock releases when the eat clip ends
-PASS  second meal during cooldown is refused — Pip needs a moment (38s).
+PASS  second meal during cooldown is refused — Pip needs a moment (32s).
 PASS  failed save: refused with a message and no eating — Could not save, so nothing changed. Check that this browser allows site storage.
 PASS  asleep: feeding refused — Pip is asleep. Wake Pip first.
 PASS  asleep: care buttons disabled
@@ -27,7 +27,7 @@ PASS  320: three cards stay above the meters/snacks — {"cardsBottom":326,"bott
 PASS  320: snacks are not covered by cards
 PASS  rehearsal cards are labelled simulated — Simulated rehearsal,Simulated rehearsal,Simulated rehearsal
 PASS  blocked RPC shows sources as unavailable, not live — Unavailable,Unavailable
-PASS  zh: revealed memory card is translated — 卡片 1: 莓果
+PASS  zh: revealed memory card is translated — 卡片 1: 紅蘿蔔
 PASS  zh: network line is translated — 以太坊主網 · 鏈 1 · 0xa43e6f…30de82
 PASS  zh: card network label is translated — 以太坊主網 · 鏈 1
 PASS  null wish: restore refused and saved bytes unchanged — That file is not a Pip backup.

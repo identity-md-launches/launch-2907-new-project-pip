@@ -1,0 +1,41 @@
+{
+  "observedAt": "2026-11-03T16:07:23Z",
+  "url": "https://pip-squeekchain-hamster-com-edf1.imd.site/",
+  "status": 200,
+  "headers": {
+    "cache-control": "public, max-age=60",
+    "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: blob: https:; font-src 'self' data: https:; media-src 'self' data: blob: https:; connect-src 'self' https: wss:; frame-src https:; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
+    "content-type": "text/html",
+    "date": "Tue, 03 Nov 2026 16:07:23 GMT",
+    "etag": "W/\"7aab9c20726b65cc73022a05fd357208\"",
+    "referrer-policy": "strict-origin-when-cross-origin",
+    "server": "railway-hikari",
+    "x-content-type-options": "nosniff",
+    "x-ipfs-cid": "bafybeicz43dmpzk7fcgswq4bwbjkpng3s7d7psdbrkdgqctxpibtfdf4oy",
+    "x-railway-request-id": "MYSUKmECSzOqc1L4O8poTA",
+    "x-railway-edge": "ams1",
+    "x-hikari-trace": "ams1.cycp"
+  },
+  "observation": "Browser console identified connect-src violations for blob: fetches followed by GLTFLoader texture errors; installed material map, normalMap, roughnessMap and metalnessMap were all absent while stage-msg was absent.",
+  "modelResponse": {
+    "url": "https://pip-squeekchain-hamster-com-edf1.imd.site/models/01-tiny-bean.glb",
+    "status": 200,
+    "headers": {
+      "accept-ranges": "bytes",
+      "cache-control": "public, max-age=60",
+      "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: blob: https:; font-src 'self' data: https:; media-src 'self' data: blob: https:; connect-src 'self' https: wss:; frame-src https:; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
+      "content-type": "model/gltf-binary",
+      "date": "Tue, 03 Nov 2026 16:25:12 GMT",
+      "etag": "\"d5a4385e1681658fcb7b257abf0927f7\"",
+      "referrer-policy": "strict-origin-when-cross-origin",
+      "server": "railway-hikari",
+      "x-content-type-options": "nosniff",
+      "x-ipfs-cid": "bafybeicz43dmpzk7fcgswq4bwbjkpng3s7d7psdbrkdgqctxpibtfdf4oy",
+      "x-railway-request-id": "yPtSle0gQZSxLHkaFFmdQQ",
+      "content-length": "329556",
+      "x-hikari-trace": "ams1.aydy",
+      "x-railway-edge": "ams1"
+    },
+    "sha256": "7a93e168ecd2a958c7e145dadfc1479e37d538d6e07ed7adc9bf65e42e5e925c"
+  }
+}

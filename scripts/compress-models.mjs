@@ -12,6 +12,7 @@ import { ALL_EXTENSIONS } from '@gltf-transform/extensions';
 import { meshopt, textureCompress, quantize, dedup, prune } from '@gltf-transform/functions';
 import { MeshoptEncoder, MeshoptDecoder } from 'meshoptimizer';
 import sharp from 'sharp';
+import { externalizeDirectory } from './externalize-textures.mjs';
 
 const [src, out] = process.argv.slice(2);
 const names = ['01-tiny-bean', '02-milk-mochi', '03-curious-baby', '04-lively-youngster', '05-little-guardian'];
@@ -36,3 +37,5 @@ for (const name of names) {
   await io.write(target, doc);
   console.log(target, fs.statSync(target).size);
 }
+// Publication does not allow blob: fetches. Keep decoded images at same-origin URLs.
+await externalizeDirectory(out);

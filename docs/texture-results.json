@@ -1,0 +1,1857 @@
+{
+  "date": "2026-11-03T16:26:55.309Z",
+  "target": "exact dist/ at /preview/ with observed publication CSP",
+  "legacy": false,
+  "browsers": [
+    {
+      "engine": "chromium",
+      "version": "145.0.7632.6"
+    },
+    {
+      "engine": "webkit",
+      "version": "26.0"
+    }
+  ],
+  "checks": [
+    {
+      "name": "chromium: HTML response and policy observed",
+      "pass": true,
+      "detail": {
+        "status": 200,
+        "csp": "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: blob: https:; font-src 'self' data: https:; media-src 'self' data: blob: https:; connect-src 'self' https: wss:; frame-src https:; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
+        "tls": {}
+      }
+    },
+    {
+      "name": "chromium first screen: four decoded maps, correct colour spaces and smooth normals",
+      "pass": true,
+      "detail": {
+        "mesh": true,
+        "maps": {
+          "map": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": "srgb"
+          },
+          "normalMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "roughnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "metalnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          }
+        },
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 9824,
+          "dark": 415,
+          "opaque": 11721
+        },
+        "flatShading": false,
+        "vertices": 22523,
+        "normals": 22523,
+        "material": "46c264c2-38ea-4439-8bec-306dcf24f6ea",
+        "message": null,
+        "ready": true,
+        "stage": 0,
+        "label": "Tiny bean"
+      }
+    },
+    {
+      "name": "chromium first screen: golden fur and dark facial pixels in atlas and rendered frame",
+      "pass": true,
+      "detail": {
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 9824,
+          "dark": 415,
+          "opaque": 11721
+        }
+      }
+    },
+    {
+      "name": "chromium: first phone screen contains Pip and snacks",
+      "pass": true
+    },
+    {
+      "name": "chromium stage 1 Tiny bean: four decoded maps, correct colour spaces and smooth normals",
+      "pass": true,
+      "detail": {
+        "mesh": true,
+        "maps": {
+          "map": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": "srgb"
+          },
+          "normalMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "roughnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "metalnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          }
+        },
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 24904,
+          "dark": 1094,
+          "opaque": 29663
+        },
+        "flatShading": false,
+        "vertices": 22523,
+        "normals": 22523,
+        "material": "46c264c2-38ea-4439-8bec-306dcf24f6ea",
+        "message": null,
+        "ready": true,
+        "stage": 0,
+        "label": "Tiny bean · Preview stages"
+      }
+    },
+    {
+      "name": "chromium stage 1 Tiny bean: golden fur and dark facial pixels in atlas and rendered frame",
+      "pass": true,
+      "detail": {
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 24904,
+          "dark": 1094,
+          "opaque": 29663
+        }
+      }
+    },
+    {
+      "name": "chromium stage 1: correct preview label",
+      "pass": true,
+      "detail": "Tiny bean · Preview stages"
+    },
+    {
+      "name": "chromium stage 2 Milk mochi: four decoded maps, correct colour spaces and smooth normals",
+      "pass": true,
+      "detail": {
+        "mesh": true,
+        "maps": {
+          "map": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": "srgb"
+          },
+          "normalMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "roughnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "metalnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          }
+        },
+        "atlas": {
+          "golden": 15279,
+          "dark": 60,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 20101,
+          "dark": 861,
+          "opaque": 25558
+        },
+        "flatShading": false,
+        "vertices": 21662,
+        "normals": 21662,
+        "material": "f129a356-d826-43ec-9762-adf47f66456d",
+        "message": null,
+        "ready": true,
+        "stage": 1,
+        "label": "Milk mochi · Preview stages"
+      }
+    },
+    {
+      "name": "chromium stage 2 Milk mochi: golden fur and dark facial pixels in atlas and rendered frame",
+      "pass": true,
+      "detail": {
+        "atlas": {
+          "golden": 15279,
+          "dark": 60,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 20101,
+          "dark": 861,
+          "opaque": 25558
+        }
+      }
+    },
+    {
+      "name": "chromium stage 2: correct preview label",
+      "pass": true,
+      "detail": "Milk mochi · Preview stages"
+    },
+    {
+      "name": "chromium stage 3 Curious baby: four decoded maps, correct colour spaces and smooth normals",
+      "pass": true,
+      "detail": {
+        "mesh": true,
+        "maps": {
+          "map": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": "srgb"
+          },
+          "normalMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "roughnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "metalnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          }
+        },
+        "atlas": {
+          "golden": 15691,
+          "dark": 73,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 13342,
+          "dark": 661,
+          "opaque": 17290
+        },
+        "flatShading": false,
+        "vertices": 22793,
+        "normals": 22793,
+        "material": "aec4145e-2a24-47a0-b4d1-f5e61dba92f5",
+        "message": null,
+        "ready": true,
+        "stage": 2,
+        "label": "Curious baby · Preview stages"
+      }
+    },
+    {
+      "name": "chromium stage 3 Curious baby: golden fur and dark facial pixels in atlas and rendered frame",
+      "pass": true,
+      "detail": {
+        "atlas": {
+          "golden": 15691,
+          "dark": 73,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 13342,
+          "dark": 661,
+          "opaque": 17290
+        }
+      }
+    },
+    {
+      "name": "chromium stage 3: correct preview label",
+      "pass": true,
+      "detail": "Curious baby · Preview stages"
+    },
+    {
+      "name": "chromium stage 4 Lively youngster: four decoded maps, correct colour spaces and smooth normals",
+      "pass": true,
+      "detail": {
+        "mesh": true,
+        "maps": {
+          "map": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": "srgb"
+          },
+          "normalMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "roughnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "metalnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          }
+        },
+        "atlas": {
+          "golden": 15985,
+          "dark": 92,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 12895,
+          "dark": 489,
+          "opaque": 15358
+        },
+        "flatShading": false,
+        "vertices": 22540,
+        "normals": 22540,
+        "material": "cca8ad05-0de3-497a-a378-a4f8bbc9cc9b",
+        "message": null,
+        "ready": true,
+        "stage": 3,
+        "label": "Lively youngster · Preview stages"
+      }
+    },
+    {
+      "name": "chromium stage 4 Lively youngster: golden fur and dark facial pixels in atlas and rendered frame",
+      "pass": true,
+      "detail": {
+        "atlas": {
+          "golden": 15985,
+          "dark": 92,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 12895,
+          "dark": 489,
+          "opaque": 15358
+        }
+      }
+    },
+    {
+      "name": "chromium stage 4: correct preview label",
+      "pass": true,
+      "detail": "Lively youngster · Preview stages"
+    },
+    {
+      "name": "chromium stage 5 Little guardian: four decoded maps, correct colour spaces and smooth normals",
+      "pass": true,
+      "detail": {
+        "mesh": true,
+        "maps": {
+          "map": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": "srgb"
+          },
+          "normalMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "roughnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "metalnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          }
+        },
+        "atlas": {
+          "golden": 15982,
+          "dark": 87,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 16082,
+          "dark": 499,
+          "opaque": 20059
+        },
+        "flatShading": false,
+        "vertices": 22674,
+        "normals": 22674,
+        "material": "be3ea42e-9843-4e7e-99a6-ff3d0b96f1b4",
+        "message": null,
+        "ready": true,
+        "stage": 4,
+        "label": "Little guardian · Preview stages"
+      }
+    },
+    {
+      "name": "chromium stage 5 Little guardian: golden fur and dark facial pixels in atlas and rendered frame",
+      "pass": true,
+      "detail": {
+        "atlas": {
+          "golden": 15982,
+          "dark": 87,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 16082,
+          "dark": 499,
+          "opaque": 20059
+        }
+      }
+    },
+    {
+      "name": "chromium stage 5: correct preview label",
+      "pass": true,
+      "detail": "Little guardian · Preview stages"
+    },
+    {
+      "name": "chromium: rapid switches settle on requested model",
+      "pass": true
+    },
+    {
+      "name": "chromium: preview never writes the visitor save",
+      "pass": true
+    },
+    {
+      "name": "chromium after direct petting: four decoded maps, correct colour spaces and smooth normals",
+      "pass": true,
+      "detail": {
+        "mesh": true,
+        "maps": {
+          "map": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": "srgb"
+          },
+          "normalMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "roughnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "metalnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          }
+        },
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 25187,
+          "dark": 1141,
+          "opaque": 30128
+        },
+        "flatShading": false,
+        "vertices": 22523,
+        "normals": 22523,
+        "material": "f719402b-9235-4c55-98e1-6e565a45f82b",
+        "message": null,
+        "ready": true,
+        "stage": 0,
+        "label": "Tiny bean"
+      }
+    },
+    {
+      "name": "chromium after direct petting: golden fur and dark facial pixels in atlas and rendered frame",
+      "pass": true,
+      "detail": {
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 25187,
+          "dark": 1141,
+          "opaque": 30128
+        }
+      }
+    },
+    {
+      "name": "chromium: direct dragging turns Pip",
+      "pass": true
+    },
+    {
+      "name": "chromium while nibbling: four decoded maps, correct colour spaces and smooth normals",
+      "pass": true,
+      "detail": {
+        "mesh": true,
+        "maps": {
+          "map": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": "srgb"
+          },
+          "normalMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "roughnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "metalnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          }
+        },
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 25336,
+          "dark": 1120,
+          "opaque": 30006
+        },
+        "flatShading": false,
+        "vertices": 22523,
+        "normals": 22523,
+        "material": "f719402b-9235-4c55-98e1-6e565a45f82b",
+        "message": null,
+        "ready": true,
+        "stage": 0,
+        "label": "Tiny bean"
+      }
+    },
+    {
+      "name": "chromium while nibbling: golden fur and dark facial pixels in atlas and rendered frame",
+      "pass": true,
+      "detail": {
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 25336,
+          "dark": 1120,
+          "opaque": 30006
+        }
+      }
+    },
+    {
+      "name": "chromium: deformation keeps the installed material and normals",
+      "pass": true
+    },
+    {
+      "name": "chromium: no relevant console, CSP or asset failures",
+      "pass": true,
+      "detail": {
+        "errors": [],
+        "violations": [],
+        "badNetwork": []
+      }
+    },
+    {
+      "name": "chromium: fifteen external WebP requests delivered",
+      "pass": true
+    },
+    {
+      "name": "chromium: corrupt basecolor refuses ready and feeding",
+      "pass": true
+    },
+    {
+      "name": "chromium: English error explains retry",
+      "pass": true
+    },
+    {
+      "name": "chromium basecolor retry: four decoded maps, correct colour spaces and smooth normals",
+      "pass": true,
+      "detail": {
+        "mesh": true,
+        "maps": {
+          "map": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": "srgb"
+          },
+          "normalMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "roughnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "metalnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          }
+        },
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 9821,
+          "dark": 416,
+          "opaque": 11722
+        },
+        "flatShading": false,
+        "vertices": 22523,
+        "normals": 22523,
+        "material": "57ab23c8-5e15-4f85-a67f-b720a81ce547",
+        "message": null,
+        "ready": true,
+        "stage": 0,
+        "label": "Tiny bean"
+      }
+    },
+    {
+      "name": "chromium basecolor retry: golden fur and dark facial pixels in atlas and rendered frame",
+      "pass": true,
+      "detail": {
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 9821,
+          "dark": 416,
+          "opaque": 11722
+        }
+      }
+    },
+    {
+      "name": "chromium: retry preserves save bytes",
+      "pass": true
+    },
+    {
+      "name": "chromium: corrupt normal refuses ready and feeding",
+      "pass": true
+    },
+    {
+      "name": "chromium: Traditional Chinese error explains retry",
+      "pass": true
+    },
+    {
+      "name": "chromium normal retry: four decoded maps, correct colour spaces and smooth normals",
+      "pass": true,
+      "detail": {
+        "mesh": true,
+        "maps": {
+          "map": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": "srgb"
+          },
+          "normalMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "roughnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "metalnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          }
+        },
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 9830,
+          "dark": 419,
+          "opaque": 11747
+        },
+        "flatShading": false,
+        "vertices": 22523,
+        "normals": 22523,
+        "material": "a4afc678-fa64-432a-a7ed-2fb6248d045d",
+        "message": null,
+        "ready": true,
+        "stage": 0,
+        "label": "小豆豆"
+      }
+    },
+    {
+      "name": "chromium normal retry: golden fur and dark facial pixels in atlas and rendered frame",
+      "pass": true,
+      "detail": {
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 9830,
+          "dark": 419,
+          "opaque": 11747
+        }
+      }
+    },
+    {
+      "name": "chromium: retry preserves save bytes",
+      "pass": true
+    },
+    {
+      "name": "chromium: corrupt rm refuses ready and feeding",
+      "pass": true
+    },
+    {
+      "name": "chromium: English error explains retry",
+      "pass": true
+    },
+    {
+      "name": "chromium rm retry: four decoded maps, correct colour spaces and smooth normals",
+      "pass": true,
+      "detail": {
+        "mesh": true,
+        "maps": {
+          "map": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": "srgb"
+          },
+          "normalMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "roughnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "metalnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          }
+        },
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 9836,
+          "dark": 420,
+          "opaque": 11749
+        },
+        "flatShading": false,
+        "vertices": 22523,
+        "normals": 22523,
+        "material": "e015d7b8-cd9b-4aae-9682-86aa68f23caf",
+        "message": null,
+        "ready": true,
+        "stage": 0,
+        "label": "Tiny bean"
+      }
+    },
+    {
+      "name": "chromium rm retry: golden fur and dark facial pixels in atlas and rendered frame",
+      "pass": true,
+      "detail": {
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 9836,
+          "dark": 420,
+          "opaque": 11749
+        }
+      }
+    },
+    {
+      "name": "chromium: retry preserves save bytes",
+      "pass": true
+    },
+    {
+      "name": "chromium: HTTP 404 basecolor refuses ready and feeding",
+      "pass": true
+    },
+    {
+      "name": "chromium: English error explains retry",
+      "pass": true
+    },
+    {
+      "name": "chromium basecolor retry: four decoded maps, correct colour spaces and smooth normals",
+      "pass": true,
+      "detail": {
+        "mesh": true,
+        "maps": {
+          "map": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": "srgb"
+          },
+          "normalMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "roughnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "metalnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          }
+        },
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 9838,
+          "dark": 418,
+          "opaque": 11750
+        },
+        "flatShading": false,
+        "vertices": 22523,
+        "normals": 22523,
+        "material": "5fe9acd4-4d9d-4cf2-b038-6095544a768b",
+        "message": null,
+        "ready": true,
+        "stage": 0,
+        "label": "Tiny bean"
+      }
+    },
+    {
+      "name": "chromium basecolor retry: golden fur and dark facial pixels in atlas and rendered frame",
+      "pass": true,
+      "detail": {
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 9838,
+          "dark": 418,
+          "opaque": 11750
+        }
+      }
+    },
+    {
+      "name": "chromium: retry preserves save bytes",
+      "pass": true
+    },
+    {
+      "name": "webkit: HTML response and policy observed",
+      "pass": true,
+      "detail": {
+        "status": 200,
+        "csp": "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: blob: https:; font-src 'self' data: https:; media-src 'self' data: blob: https:; connect-src 'self' https: wss:; frame-src https:; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
+        "tls": {}
+      }
+    },
+    {
+      "name": "webkit first screen: four decoded maps, correct colour spaces and smooth normals",
+      "pass": true,
+      "detail": {
+        "mesh": true,
+        "maps": {
+          "map": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": "srgb"
+          },
+          "normalMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "roughnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "metalnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          }
+        },
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 9802,
+          "dark": 419,
+          "opaque": 11652
+        },
+        "flatShading": false,
+        "vertices": 22523,
+        "normals": 22523,
+        "material": "9bcf1519-0e36-4525-9d7b-b0ddfcc4559d",
+        "message": null,
+        "ready": true,
+        "stage": 0,
+        "label": "Tiny bean"
+      }
+    },
+    {
+      "name": "webkit first screen: golden fur and dark facial pixels in atlas and rendered frame",
+      "pass": true,
+      "detail": {
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 9802,
+          "dark": 419,
+          "opaque": 11652
+        }
+      }
+    },
+    {
+      "name": "webkit: first phone screen contains Pip and snacks",
+      "pass": true
+    },
+    {
+      "name": "webkit stage 1 Tiny bean: four decoded maps, correct colour spaces and smooth normals",
+      "pass": true,
+      "detail": {
+        "mesh": true,
+        "maps": {
+          "map": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": "srgb"
+          },
+          "normalMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "roughnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "metalnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          }
+        },
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 25256,
+          "dark": 1127,
+          "opaque": 30133
+        },
+        "flatShading": false,
+        "vertices": 22523,
+        "normals": 22523,
+        "material": "9bcf1519-0e36-4525-9d7b-b0ddfcc4559d",
+        "message": null,
+        "ready": true,
+        "stage": 0,
+        "label": "Tiny bean · Preview stages"
+      }
+    },
+    {
+      "name": "webkit stage 1 Tiny bean: golden fur and dark facial pixels in atlas and rendered frame",
+      "pass": true,
+      "detail": {
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 25256,
+          "dark": 1127,
+          "opaque": 30133
+        }
+      }
+    },
+    {
+      "name": "webkit stage 1: correct preview label",
+      "pass": true,
+      "detail": "Tiny bean · Preview stages"
+    },
+    {
+      "name": "webkit stage 2 Milk mochi: four decoded maps, correct colour spaces and smooth normals",
+      "pass": true,
+      "detail": {
+        "mesh": true,
+        "maps": {
+          "map": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": "srgb"
+          },
+          "normalMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "roughnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "metalnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          }
+        },
+        "atlas": {
+          "golden": 15279,
+          "dark": 60,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 20008,
+          "dark": 883,
+          "opaque": 25364
+        },
+        "flatShading": false,
+        "vertices": 21662,
+        "normals": 21662,
+        "material": "60e08795-7ba8-47f9-b50f-e132d43b1df5",
+        "message": null,
+        "ready": true,
+        "stage": 1,
+        "label": "Milk mochi · Preview stages"
+      }
+    },
+    {
+      "name": "webkit stage 2 Milk mochi: golden fur and dark facial pixels in atlas and rendered frame",
+      "pass": true,
+      "detail": {
+        "atlas": {
+          "golden": 15279,
+          "dark": 60,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 20008,
+          "dark": 883,
+          "opaque": 25364
+        }
+      }
+    },
+    {
+      "name": "webkit stage 2: correct preview label",
+      "pass": true,
+      "detail": "Milk mochi · Preview stages"
+    },
+    {
+      "name": "webkit stage 3 Curious baby: four decoded maps, correct colour spaces and smooth normals",
+      "pass": true,
+      "detail": {
+        "mesh": true,
+        "maps": {
+          "map": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": "srgb"
+          },
+          "normalMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "roughnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "metalnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          }
+        },
+        "atlas": {
+          "golden": 15691,
+          "dark": 73,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 13676,
+          "dark": 618,
+          "opaque": 17400
+        },
+        "flatShading": false,
+        "vertices": 22793,
+        "normals": 22793,
+        "material": "53fa2568-6354-4aa6-af6e-2f09d7ef131f",
+        "message": null,
+        "ready": true,
+        "stage": 2,
+        "label": "Curious baby · Preview stages"
+      }
+    },
+    {
+      "name": "webkit stage 3 Curious baby: golden fur and dark facial pixels in atlas and rendered frame",
+      "pass": true,
+      "detail": {
+        "atlas": {
+          "golden": 15691,
+          "dark": 73,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 13676,
+          "dark": 618,
+          "opaque": 17400
+        }
+      }
+    },
+    {
+      "name": "webkit stage 3: correct preview label",
+      "pass": true,
+      "detail": "Curious baby · Preview stages"
+    },
+    {
+      "name": "webkit stage 4 Lively youngster: four decoded maps, correct colour spaces and smooth normals",
+      "pass": true,
+      "detail": {
+        "mesh": true,
+        "maps": {
+          "map": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": "srgb"
+          },
+          "normalMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "roughnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "metalnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          }
+        },
+        "atlas": {
+          "golden": 15985,
+          "dark": 92,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 12927,
+          "dark": 499,
+          "opaque": 15370
+        },
+        "flatShading": false,
+        "vertices": 22540,
+        "normals": 22540,
+        "material": "80e23dd6-d439-4480-9f22-97696c970c12",
+        "message": null,
+        "ready": true,
+        "stage": 3,
+        "label": "Lively youngster · Preview stages"
+      }
+    },
+    {
+      "name": "webkit stage 4 Lively youngster: golden fur and dark facial pixels in atlas and rendered frame",
+      "pass": true,
+      "detail": {
+        "atlas": {
+          "golden": 15985,
+          "dark": 92,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 12927,
+          "dark": 499,
+          "opaque": 15370
+        }
+      }
+    },
+    {
+      "name": "webkit stage 4: correct preview label",
+      "pass": true,
+      "detail": "Lively youngster · Preview stages"
+    },
+    {
+      "name": "webkit stage 5 Little guardian: four decoded maps, correct colour spaces and smooth normals",
+      "pass": true,
+      "detail": {
+        "mesh": true,
+        "maps": {
+          "map": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": "srgb"
+          },
+          "normalMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "roughnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "metalnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          }
+        },
+        "atlas": {
+          "golden": 15982,
+          "dark": 87,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 16151,
+          "dark": 455,
+          "opaque": 20677
+        },
+        "flatShading": false,
+        "vertices": 22674,
+        "normals": 22674,
+        "material": "59406dad-c4f5-4549-85c3-8b111e8028e5",
+        "message": null,
+        "ready": true,
+        "stage": 4,
+        "label": "Little guardian · Preview stages"
+      }
+    },
+    {
+      "name": "webkit stage 5 Little guardian: golden fur and dark facial pixels in atlas and rendered frame",
+      "pass": true,
+      "detail": {
+        "atlas": {
+          "golden": 15982,
+          "dark": 87,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 16151,
+          "dark": 455,
+          "opaque": 20677
+        }
+      }
+    },
+    {
+      "name": "webkit stage 5: correct preview label",
+      "pass": true,
+      "detail": "Little guardian · Preview stages"
+    },
+    {
+      "name": "webkit: rapid switches settle on requested model",
+      "pass": true
+    },
+    {
+      "name": "webkit: preview never writes the visitor save",
+      "pass": true
+    },
+    {
+      "name": "webkit after direct petting: four decoded maps, correct colour spaces and smooth normals",
+      "pass": true,
+      "detail": {
+        "mesh": true,
+        "maps": {
+          "map": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": "srgb"
+          },
+          "normalMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "roughnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "metalnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          }
+        },
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 25249,
+          "dark": 1136,
+          "opaque": 30111
+        },
+        "flatShading": false,
+        "vertices": 22523,
+        "normals": 22523,
+        "material": "a4bd8230-a72a-4366-82a5-1a66fd818ab4",
+        "message": null,
+        "ready": true,
+        "stage": 0,
+        "label": "Tiny bean"
+      }
+    },
+    {
+      "name": "webkit after direct petting: golden fur and dark facial pixels in atlas and rendered frame",
+      "pass": true,
+      "detail": {
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 25249,
+          "dark": 1136,
+          "opaque": 30111
+        }
+      }
+    },
+    {
+      "name": "webkit: direct dragging turns Pip",
+      "pass": true
+    },
+    {
+      "name": "webkit while nibbling: four decoded maps, correct colour spaces and smooth normals",
+      "pass": true,
+      "detail": {
+        "mesh": true,
+        "maps": {
+          "map": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": "srgb"
+          },
+          "normalMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "roughnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "metalnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          }
+        },
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 25609,
+          "dark": 1170,
+          "opaque": 30633
+        },
+        "flatShading": false,
+        "vertices": 22523,
+        "normals": 22523,
+        "material": "a4bd8230-a72a-4366-82a5-1a66fd818ab4",
+        "message": null,
+        "ready": true,
+        "stage": 0,
+        "label": "Tiny bean"
+      }
+    },
+    {
+      "name": "webkit while nibbling: golden fur and dark facial pixels in atlas and rendered frame",
+      "pass": true,
+      "detail": {
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 25609,
+          "dark": 1170,
+          "opaque": 30633
+        }
+      }
+    },
+    {
+      "name": "webkit: deformation keeps the installed material and normals",
+      "pass": true
+    },
+    {
+      "name": "webkit: no relevant console, CSP or asset failures",
+      "pass": true,
+      "detail": {
+        "errors": [],
+        "violations": [],
+        "badNetwork": []
+      }
+    },
+    {
+      "name": "webkit: fifteen external WebP requests delivered",
+      "pass": true
+    },
+    {
+      "name": "webkit: corrupt basecolor refuses ready and feeding",
+      "pass": true
+    },
+    {
+      "name": "webkit: English error explains retry",
+      "pass": true
+    },
+    {
+      "name": "webkit basecolor retry: four decoded maps, correct colour spaces and smooth normals",
+      "pass": true,
+      "detail": {
+        "mesh": true,
+        "maps": {
+          "map": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": "srgb"
+          },
+          "normalMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "roughnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "metalnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          }
+        },
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 9829,
+          "dark": 431,
+          "opaque": 11710
+        },
+        "flatShading": false,
+        "vertices": 22523,
+        "normals": 22523,
+        "material": "0c846d31-1d59-4827-8d07-dbfe0df0c848",
+        "message": null,
+        "ready": true,
+        "stage": 0,
+        "label": "Tiny bean"
+      }
+    },
+    {
+      "name": "webkit basecolor retry: golden fur and dark facial pixels in atlas and rendered frame",
+      "pass": true,
+      "detail": {
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 9829,
+          "dark": 431,
+          "opaque": 11710
+        }
+      }
+    },
+    {
+      "name": "webkit: retry preserves save bytes",
+      "pass": true
+    },
+    {
+      "name": "webkit: corrupt normal refuses ready and feeding",
+      "pass": true
+    },
+    {
+      "name": "webkit: Traditional Chinese error explains retry",
+      "pass": true
+    },
+    {
+      "name": "webkit normal retry: four decoded maps, correct colour spaces and smooth normals",
+      "pass": true,
+      "detail": {
+        "mesh": true,
+        "maps": {
+          "map": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": "srgb"
+          },
+          "normalMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "roughnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "metalnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          }
+        },
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 9866,
+          "dark": 417,
+          "opaque": 11747
+        },
+        "flatShading": false,
+        "vertices": 22523,
+        "normals": 22523,
+        "material": "7c378872-386d-44c2-86f7-030e0eab8dad",
+        "message": null,
+        "ready": true,
+        "stage": 0,
+        "label": "小豆豆"
+      }
+    },
+    {
+      "name": "webkit normal retry: golden fur and dark facial pixels in atlas and rendered frame",
+      "pass": true,
+      "detail": {
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 9866,
+          "dark": 417,
+          "opaque": 11747
+        }
+      }
+    },
+    {
+      "name": "webkit: retry preserves save bytes",
+      "pass": true
+    },
+    {
+      "name": "webkit: corrupt rm refuses ready and feeding",
+      "pass": true
+    },
+    {
+      "name": "webkit: English error explains retry",
+      "pass": true
+    },
+    {
+      "name": "webkit rm retry: four decoded maps, correct colour spaces and smooth normals",
+      "pass": true,
+      "detail": {
+        "mesh": true,
+        "maps": {
+          "map": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": "srgb"
+          },
+          "normalMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "roughnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "metalnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          }
+        },
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 9849,
+          "dark": 428,
+          "opaque": 11732
+        },
+        "flatShading": false,
+        "vertices": 22523,
+        "normals": 22523,
+        "material": "c87526fb-9b64-4a1d-8dc4-d8fc9ed9ff91",
+        "message": null,
+        "ready": true,
+        "stage": 0,
+        "label": "Tiny bean"
+      }
+    },
+    {
+      "name": "webkit rm retry: golden fur and dark facial pixels in atlas and rendered frame",
+      "pass": true,
+      "detail": {
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 9849,
+          "dark": 428,
+          "opaque": 11732
+        }
+      }
+    },
+    {
+      "name": "webkit: retry preserves save bytes",
+      "pass": true
+    },
+    {
+      "name": "webkit: HTTP 404 basecolor refuses ready and feeding",
+      "pass": true
+    },
+    {
+      "name": "webkit: English error explains retry",
+      "pass": true
+    },
+    {
+      "name": "webkit basecolor retry: four decoded maps, correct colour spaces and smooth normals",
+      "pass": true,
+      "detail": {
+        "mesh": true,
+        "maps": {
+          "map": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": "srgb"
+          },
+          "normalMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "roughnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          },
+          "metalnessMap": {
+            "present": true,
+            "width": 1024,
+            "height": 1024,
+            "colorSpace": ""
+          }
+        },
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 9872,
+          "dark": 427,
+          "opaque": 11749
+        },
+        "flatShading": false,
+        "vertices": 22523,
+        "normals": 22523,
+        "material": "6af87faf-6f6a-4366-aedd-53658f5234b6",
+        "message": null,
+        "ready": true,
+        "stage": 0,
+        "label": "Tiny bean"
+      }
+    },
+    {
+      "name": "webkit basecolor retry: golden fur and dark facial pixels in atlas and rendered frame",
+      "pass": true,
+      "detail": {
+        "atlas": {
+          "golden": 15183,
+          "dark": 113,
+          "opaque": 16384
+        },
+        "rendered": {
+          "golden": 9872,
+          "dark": 427,
+          "opaque": 11749
+        }
+      }
+    },
+    {
+      "name": "webkit: retry preserves save bytes",
+      "pass": true
+    }
+  ],
+  "passed": 98,
+  "failed": 0
+}

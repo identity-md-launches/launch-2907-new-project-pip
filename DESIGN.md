@@ -32,10 +32,16 @@ All tokens are CSS custom properties on `:root` in `src/styles.css`.
 | `--warn` | `#a3321f` | Errors, removed-by-reorg, failed loads |
 | `--focus` | `#1a5fb4` | 3px focus ring on `:focus-visible` |
 
-The stage background is a radial gradient `#fff8ee → #f3e3cc → #ead6b9` (`.stage`). The design
-probe's resolved solid-background samples passed (lowest measured ratio 6.5:1 on the tagline).
+The stage background is a radial gradient `#fff8ee → #f3e3cc → #ead6b9` (`.stage`). The current
+design probe's resolved solid-background samples passed its 4.5:1 text / 3:1 large-text thresholds.
 It excluded 26 text boxes over canvas/gradients; those pairs are unmeasured, including translucent
 stage chips. See [the review coverage](docs/VALIDATION.md#better-interface-review).
+
+Pip's golden/orange fur, white muzzle/belly, pink ears and dark eyes come from the owner's
+authored texture atlases, not CSS or fallback material colours. Each stage uses a relative base
+colour WebP in sRGB plus normal and packed roughness/metalness WebPs in `NoColorSpace`. The
+existing ACES filmic tone mapping (exposure 1.05), sRGB renderer output and warm lights in
+`src/scene/PetScene.ts` remain. Geometry keeps its authored smooth normals through deformation.
 
 ## Typography
 
@@ -45,6 +51,8 @@ stage chips. See [the review coverage](docs/VALIDATION.md#better-interface-revie
 - Two weights: 400 body, 600 headings, buttons, labels, numbers.
 - Five sizes: `--fs-1` 0.8125rem (hints, meta, chips), `--fs-2` 0.9375rem (body, buttons),
   `--fs-3` 1.0625rem (h3/h4), `--fs-4` 1.3125rem (h2), `--fs-5` 1.75rem (h1 "Pip").
+- `html` and `body` both use `--fs-2`; computed first-screen sizes in Chromium are 12px hints,
+  14px body, 19.5px section headings and 26.5px title. These are the existing source's values.
 - Line height 1.5 body, 1.1–1.25 headings. No letter-spacing changes, no all-caps labels.
 - `.num` uses tabular numerals for meters, block numbers and counters.
 
@@ -82,6 +90,7 @@ small inner elements. Cards carry a 4px inline-start border in their kind colour
 | `.btn`, `.btn-primary`, `.btn-quiet` | `styles.css` | 44px min height. Pressed/checked state uses `--accent-soft` + accent border. Disabled at 55% opacity. |
 | `.icon-btn` | header | 40px pill: language, sound on/off, sound settings |
 | `.seg` / `.seg-btn` | `Stage.tsx` | Pet/Turn switch with `aria-pressed` |
+| `.stage-msg` | `Stage.tsx`, `modelIntegrity.ts` | `data-load` tracks loading/ok/failed/nogl; `aria-busy` while loading, polite status, persistent bilingual error and keyboard Retry on model or texture failure. Snacks disable until validated maps are ready. |
 | `.bars` (`dl`) | `Stage.tsx` | Bond, energy, fullness meters with numeric value |
 | `.snack` | `Stage.tsx` | Drag source and Enter-to-feed button; `.ghost` follows the pointer, `.ghost-ok` when droppable |
 | `.cards` / `.card-{local,live,simulated}` | `Stage.tsx` | Up to 3 at once, auto-dismiss 5 s (local) / 9 s; tag, network label, title, why, confirmations, tx link |
@@ -92,6 +101,8 @@ small inner elements. Cards carry a 4px inline-start border in their kind colour
 | Chat log/composer | `ChatPanel.tsx` | Streaming lines, Stop/Clear/Retry, IME-safe Enter |
 
 Icons are inline SVG in `src/ui/icons.tsx` (food, shapes, sound), `aria-hidden` beside text.
+The repair adds no new design tokens, font, page or navigation. Retry uses the existing `.btn`
+and visible focus ring. English is the default; Traditional Chinese follows the language control.
 
 ## Motion
 
@@ -106,3 +117,5 @@ and transitions are disabled by the same media query.
 - Don't place new overlays over `.stage-bottom`; anything floating on the stage must respect
   `--top-inset`/`--bottom-inset`.
 - Don't add a sixth type size or a second family.
+- Don't report a mesh as ready without its decoded base colour, normal and roughness/metalness
+  maps. Keep relative texture files beside their GLB; embedded blob fetches fail under publication CSP.

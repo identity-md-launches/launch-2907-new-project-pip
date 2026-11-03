@@ -1,21 +1,21 @@
 {
   "basis": "Raw bytes of unique existing tracked and non-ignored files plus required revision response; not Git pack size or transfer compression.",
-  "files": 109,
+  "files": 171,
   "groups": {
-    "dist": 3409761,
-    "docs": 734291,
-    "licenses": 39362,
-    "scripts": 22233,
-    "root": 98967,
-    "public": 2484765,
-    "src": 186820,
-    "tests": 64518
+    "dist": 3411153,
+    "docs": 1385296,
+    "public": 2484287,
+    "scripts": 47838,
+    "src": 190535,
+    "tests": 69524,
+    "root": 104193,
+    "licenses": 39362
   },
-  "total": 7040717,
+  "total": 7732188,
   "budget": 8388608,
-  "headroom": 1347891,
-  "exportBytes": 3409761,
-  "modelBytes": 1661640,
+  "headroom": 656420,
+  "exportBytes": 3411153,
+  "modelBytes": 1661162,
   "audioBytes": 757273,
-  "screenshotBytes": 698142
+  "screenshotBytes": 1222314
 }

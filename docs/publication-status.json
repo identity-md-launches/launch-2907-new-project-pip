@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-11-03T16:31:43.297Z",
+  "status": "pending-publication",
+  "canonicalUrl": "https://pip-squeekchain-hamster-com-edf1.imd.site/",
+  "newCanonicalUrl": null,
+  "observedCid": "bafybeicz43dmpzk7fcgswq4bwbjkpng3s7d7psdbrkdgqctxpibtfdf4oy",
+  "normalTls": {
+    "issuer": "YR1",
+    "protocol": "TLS 1.3",
+    "subjectName": "*.imd.site",
+    "validFrom": 1793216719,
+    "validTo": 1800992718
+  },
+  "htmlMatchesRepairedExport": false,
+  "oldHtmlSha256": "27b2e11fe264522a41afebeb4bcd7097c79ee7a000b5297dfa8663071cb9b5be",
+  "repairedHtmlSha256": "0db7bb87873b3038e81f84ece28720a7e65d8d29caeecf41aa7b9c6f18d01401",
+  "repairedPublicAppearance": "pending",
+  "repairedPublicNetworkAndDecodeCheck": "pending",
+  "reason": "The canonical URL still serves the previous export. The platform publishes committed dist/ after submission. No repaired public URL or CID is available yet.",
+  "postPublicationCommand": "node scripts/check-textures.mjs --url https://pip-squeekchain-hamster-com-edf1.imd.site/"
+}

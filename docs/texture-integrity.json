@@ -1,0 +1,351 @@
+{
+  "basis": "Byte fingerprints taken before extraction from the accepted b6aee41c5919311d4fa19a6a0cba9f961497fe9f assets; geometry and image payloads must remain identical.",
+  "referenceZipSha256": "2c852405d0f488d75aa34841ba672772729ee3282206d8235432a8f553fc9144",
+  "stages": [
+    {
+      "model": "01-tiny-bean.glb",
+      "baselineGlbSha256": "7a93e168ecd2a958c7e145dadfc1479e37d538d6e07ed7adc9bf65e42e5e925c",
+      "images": [
+        {
+          "uri": "01-tiny-bean-basecolor.webp",
+          "bytes": 40792,
+          "sha256": "5480bccdbbb8ac88200a8792cea0f263d8159b1971673c402d957346e350ada9"
+        },
+        {
+          "uri": "01-tiny-bean-rm.webp",
+          "bytes": 26736,
+          "sha256": "63a6e5f8709701e7feab5e3fd9cdd64719cc80af637b7cd246bdb591bb1ef97e"
+        },
+        {
+          "uri": "01-tiny-bean-normal.webp",
+          "bytes": 6138,
+          "sha256": "ecae41158c51386aee563b8d35ac67458d691b2109c8d14934f6f5704d7b9bf8"
+        }
+      ],
+      "compressedGeometry": [
+        {
+          "mode": "TRIANGLES",
+          "filter": null,
+          "count": 119064,
+          "byteStride": 2,
+          "bytes": 44974,
+          "sha256": "a32d97f71dc5a535c494e989badcf3ecea0b56079e54eeb1a90a797f4dba8972"
+        },
+        {
+          "mode": "ATTRIBUTES",
+          "filter": "OCTAHEDRAL",
+          "count": 22523,
+          "byteStride": 4,
+          "bytes": 37102,
+          "sha256": "a48b2e1fd4a859ab5bf23a7cb0c85ced71553738e09d13d01d2bb2adb23cbbda"
+        },
+        {
+          "mode": "ATTRIBUTES",
+          "filter": null,
+          "count": 22523,
+          "byteStride": 8,
+          "bytes": 104384,
+          "sha256": "29833d540c0510a1f2f29d3ddd981ed9cb330b25b29f55bb059fbe248ec2f56e"
+        },
+        {
+          "mode": "ATTRIBUTES",
+          "filter": null,
+          "count": 22523,
+          "byteStride": 4,
+          "bytes": 66444,
+          "sha256": "3e43ea596a96378868c4f32c4d54bc27ccf1b395464ad4e9331c4f247518b0d9"
+        }
+      ],
+      "material": {
+        "name": "tripo_material_9716c3c4-357e-47b5-ba9a-76a6b19ee51d",
+        "pbrMetallicRoughness": {
+          "baseColorTexture": {
+            "index": 0
+          },
+          "metallicRoughnessTexture": {
+            "index": 2
+          }
+        },
+        "normalTexture": {
+          "index": 1
+        }
+      }
+    },
+    {
+      "model": "02-milk-mochi.glb",
+      "baselineGlbSha256": "d3c30267a7a5eb6221ad47122b5f47e5e4df3eea5cb6a6d8efac2ad01d2ebec2",
+      "images": [
+        {
+          "uri": "02-milk-mochi-basecolor.webp",
+          "bytes": 38932,
+          "sha256": "b7a9757c13a388c21cf4d09422822c9d9539dd7116c59bd5a858152219b090b4"
+        },
+        {
+          "uri": "02-milk-mochi-rm.webp",
+          "bytes": 20680,
+          "sha256": "3878f985070b12bbbeb32cb058331d7ef91468b142179f45005c3d668a872016"
+        },
+        {
+          "uri": "02-milk-mochi-normal.webp",
+          "bytes": 6004,
+          "sha256": "82b23fb36a3644e0a6bbff4185e11388dce1b4cf4040fa59dcb4ee4ecf967d5e"
+        }
+      ],
+      "compressedGeometry": [
+        {
+          "mode": "TRIANGLES",
+          "filter": null,
+          "count": 115902,
+          "byteStride": 2,
+          "bytes": 43851,
+          "sha256": "a3be2f3ea96b8cbc8ce96d043dab4f1364bb58fb033633c1163dd8a65ceb5316"
+        },
+        {
+          "mode": "ATTRIBUTES",
+          "filter": "OCTAHEDRAL",
+          "count": 21662,
+          "byteStride": 4,
+          "bytes": 35958,
+          "sha256": "2d2174a187061d43caac2e2ffc05f5a701e84d56d63847493dca8f25e6a4315f"
+        },
+        {
+          "mode": "ATTRIBUTES",
+          "filter": null,
+          "count": 21662,
+          "byteStride": 8,
+          "bytes": 100392,
+          "sha256": "c9e84a423fff135237dc6bc899556a38b54b3d51219736585547d8b63c532de2"
+        },
+        {
+          "mode": "ATTRIBUTES",
+          "filter": null,
+          "count": 21662,
+          "byteStride": 4,
+          "bytes": 63866,
+          "sha256": "4dc6041c696af13be5818c90bc59b94dd0aba4088f5be3767828051e3a15f01d"
+        }
+      ],
+      "material": {
+        "name": "tripo_material_c5e53053-7d51-493e-aeaf-caa10f1933f2",
+        "pbrMetallicRoughness": {
+          "baseColorTexture": {
+            "index": 0
+          },
+          "metallicRoughnessTexture": {
+            "index": 2
+          }
+        },
+        "normalTexture": {
+          "index": 1
+        }
+      }
+    },
+    {
+      "model": "03-curious-baby.glb",
+      "baselineGlbSha256": "6196c4527036dabc182367fbcba0a1e64e133c7be63c5246860077a08b7067b0",
+      "images": [
+        {
+          "uri": "03-curious-baby-basecolor.webp",
+          "bytes": 42458,
+          "sha256": "b82c5f4bfc7217e33882783169c8b5426e508ff0ae0c82cb75e4bf5d5e05569d"
+        },
+        {
+          "uri": "03-curious-baby-rm.webp",
+          "bytes": 23046,
+          "sha256": "9259a0b749070c7c5ffec5512a5fbfba3d33413f90d7f49141fd14bcce885841"
+        },
+        {
+          "uri": "03-curious-baby-normal.webp",
+          "bytes": 6982,
+          "sha256": "ef5c475c7d15dd7b46746d91be71362f0c78490bbebf0fb18cfba8efbf6c1a41"
+        }
+      ],
+      "compressedGeometry": [
+        {
+          "mode": "TRIANGLES",
+          "filter": null,
+          "count": 117828,
+          "byteStride": 2,
+          "bytes": 44363,
+          "sha256": "8937c227b9ef5957564a67a104c9938b5ad210592b99040a46e78038e55d45ea"
+        },
+        {
+          "mode": "ATTRIBUTES",
+          "filter": "OCTAHEDRAL",
+          "count": 22793,
+          "byteStride": 4,
+          "bytes": 37259,
+          "sha256": "5769d3648c54d8023629dc054b4d7db7edfa97fa618972cee868bd8e9b6672ab"
+        },
+        {
+          "mode": "ATTRIBUTES",
+          "filter": null,
+          "count": 22793,
+          "byteStride": 8,
+          "bytes": 104092,
+          "sha256": "d9c0e765905f363f7a578aaeb829143ccfdf084066028ccf566545ef45248fc9"
+        },
+        {
+          "mode": "ATTRIBUTES",
+          "filter": null,
+          "count": 22793,
+          "byteStride": 4,
+          "bytes": 67281,
+          "sha256": "23df91d8da5761650ebeec8de4abdd4d762e0472e2582c2dc3dda62f37439f87"
+        }
+      ],
+      "material": {
+        "name": "tripo_material_147afc16-f609-4ec1-a2ec-443e63716ff1",
+        "pbrMetallicRoughness": {
+          "baseColorTexture": {
+            "index": 0
+          },
+          "metallicRoughnessTexture": {
+            "index": 2
+          }
+        },
+        "normalTexture": {
+          "index": 1
+        }
+      }
+    },
+    {
+      "model": "04-lively-youngster.glb",
+      "baselineGlbSha256": "dbac6e8d2c3f80e21f916b0db809c75955f7ee25e38bfbb75f03fb4c2950a73c",
+      "images": [
+        {
+          "uri": "04-lively-youngster-basecolor.webp",
+          "bytes": 40862,
+          "sha256": "c053c3dd62442194fe895d346c7a9fa8e43baa6c67759976bb9541ea602abe06"
+        },
+        {
+          "uri": "04-lively-youngster-rm.webp",
+          "bytes": 36936,
+          "sha256": "2ee23cc9f713dfa984844f6144a9c8093575ef665debd6103b271f26c1ba6bc4"
+        },
+        {
+          "uri": "04-lively-youngster-normal.webp",
+          "bytes": 6728,
+          "sha256": "85eb741ae5ee5504726ee306c64a7ee0a5c6959700eb39585014b44f6d0af321"
+        }
+      ],
+      "compressedGeometry": [
+        {
+          "mode": "TRIANGLES",
+          "filter": null,
+          "count": 114270,
+          "byteStride": 2,
+          "bytes": 42696,
+          "sha256": "cbcaeedf108d17fb850f1cc39b8b7fa1b9982eb5742defad51a80ab6208f19a9"
+        },
+        {
+          "mode": "ATTRIBUTES",
+          "filter": "OCTAHEDRAL",
+          "count": 22540,
+          "byteStride": 4,
+          "bytes": 37020,
+          "sha256": "e18eb62a0a78bdf6bc609f9adb4123a3d540226ca64f82ac015c19141ed27cef"
+        },
+        {
+          "mode": "ATTRIBUTES",
+          "filter": null,
+          "count": 22540,
+          "byteStride": 8,
+          "bytes": 102687,
+          "sha256": "3889e698c158bca0b7c4f623f549a588c570f1cb454e83236768419253fbae58"
+        },
+        {
+          "mode": "ATTRIBUTES",
+          "filter": null,
+          "count": 22540,
+          "byteStride": 4,
+          "bytes": 66759,
+          "sha256": "53f6ad4830f2fb160a9028b9fdfade71200c0c0fb9e61b1beb6c0977641a2949"
+        }
+      ],
+      "material": {
+        "name": "tripo_material_71eb7065-22bf-40c9-9c31-8f145fb9b95a",
+        "pbrMetallicRoughness": {
+          "baseColorTexture": {
+            "index": 0
+          },
+          "metallicRoughnessTexture": {
+            "index": 2
+          }
+        },
+        "normalTexture": {
+          "index": 1
+        }
+      }
+    },
+    {
+      "model": "05-little-guardian.glb",
+      "baselineGlbSha256": "675daf8ceb973b2c5a555761f690b291a6abd992af2df347fc7138eeb8cbb0aa",
+      "images": [
+        {
+          "uri": "05-little-guardian-basecolor.webp",
+          "bytes": 43220,
+          "sha256": "d6f135b8a64c6628008dc2bc6da35e8701df80e1e01a767dbe244369e48645a2"
+        },
+        {
+          "uri": "05-little-guardian-rm.webp",
+          "bytes": 47776,
+          "sha256": "08c58a9d06f061d9c5eefc111d8b3b12a5fd8256618896e4f75ed698239c466e"
+        },
+        {
+          "uri": "05-little-guardian-normal.webp",
+          "bytes": 6872,
+          "sha256": "2a9fe1ee1e8641d9c94c9c87a96dba253b88870a6b414302bd56d97b57ab6b2a"
+        }
+      ],
+      "compressedGeometry": [
+        {
+          "mode": "TRIANGLES",
+          "filter": null,
+          "count": 117987,
+          "byteStride": 2,
+          "bytes": 44349,
+          "sha256": "d227a5d5a946c2dabef40ad56433eb6da70ebe775c713ae4a06c37891fadd3a7"
+        },
+        {
+          "mode": "ATTRIBUTES",
+          "filter": "OCTAHEDRAL",
+          "count": 22674,
+          "byteStride": 4,
+          "bytes": 37947,
+          "sha256": "cd03b4384b2417e1a53753548a2a10050e6ad72df8885d6106cec208c50b1731"
+        },
+        {
+          "mode": "ATTRIBUTES",
+          "filter": null,
+          "count": 22674,
+          "byteStride": 8,
+          "bytes": 104156,
+          "sha256": "d8634dd1ba63304ef346fb6e6add71d9e3d0a555f84d8ada98d319d2d1125e75"
+        },
+        {
+          "mode": "ATTRIBUTES",
+          "filter": null,
+          "count": 22674,
+          "byteStride": 4,
+          "bytes": 66927,
+          "sha256": "fd43fa6cca9808a956897af69e5e95f1dde7f61801c532dcccbea44a31030916"
+        }
+      ],
+      "material": {
+        "name": "tripo_material_8826cb4b-ebaa-419e-a266-9a71858cce36",
+        "pbrMetallicRoughness": {
+          "baseColorTexture": {
+            "index": 0
+          },
+          "metallicRoughnessTexture": {
+            "index": 2
+          }
+        },
+        "normalTexture": {
+          "index": 1
+        }
+      }
+    }
+  ]
+}

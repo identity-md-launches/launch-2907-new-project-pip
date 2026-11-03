@@ -13,10 +13,11 @@ import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { extname, join, normalize, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { PUBLICATION_CSP } from './publication-policy.mjs';
 
 const ROOT = resolve('dist');
 const SHOTS = process.env.SHOTS || '';
-const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.glb': 'model/gltf-binary', '.flac': 'audio/flac', '.jpg': 'image/jpeg', '.png': 'image/png', '.json': 'application/json' };
+const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.glb': 'model/gltf-binary', '.webp': 'image/webp', '.flac': 'audio/flac', '.jpg': 'image/jpeg', '.png': 'image/png', '.json': 'application/json' };
 
 async function loadPlaywright() {
   try {
@@ -35,7 +36,7 @@ const server = createServer(async (req, res) => {
   if (url.pathname.endsWith('/')) p = join(p, 'index.html');
   try {
     const body = await readFile(p);
-    res.writeHead(200, { 'Content-Type': TYPES[extname(p)] || 'application/octet-stream' }).end(body);
+    res.writeHead(200, { 'Content-Type': TYPES[extname(p)] || 'application/octet-stream', 'Content-Security-Policy': PUBLICATION_CSP, 'X-Content-Type-Options': 'nosniff' }).end(body);
   } catch {
     res.writeHead(404).end('not found');
   }
@@ -90,7 +91,7 @@ try {
     await tab(page, 'Pip');
     for (let i = 1; i <= 5; i++) {
       await page.getByRole('button', { name: new RegExp(`^${i}\\. `) }).click();
-      await page.waitForFunction(() => !document.querySelector('.stage-msg'), null, { timeout: 20000 });
+      await page.waitForFunction((stage) => window.__pip?.isReady() && window.__pip?.stage === stage && !document.querySelector('.stage-msg'), i - 1, { timeout: 20000 });
       await page.evaluate(() => scrollTo(0, 0));
       await page.waitForTimeout(300);
       const f = await page.evaluate(() => window.__pip.feetScreen());

@@ -136,7 +136,7 @@ export function Stage(p: Props) {
 
   const pct = (n: number) => `${Math.round(n)}%`;
   return (
-    <section className="stage" ref={stageRef} aria-label={p.t('appTitle')}>
+    <section className="stage" ref={stageRef} aria-label={p.t('appTitle')} data-load={load} aria-busy={load === 'loading'}>
       <canvas ref={canvasRef} className="pet-canvas" data-mode={p.mode} aria-label={p.t('modeHint')} role="img" />
       {load !== 'ok' && (
         <div className="stage-msg" role="status">
@@ -219,7 +219,7 @@ export function Stage(p: Props) {
                 key={f}
                 className="snack"
                 aria-describedby="snack-hint"
-                disabled={p.preview}
+                disabled={p.preview || load !== 'ok'}
                 onPointerDown={onSnackDown(f)}
                 onPointerMove={onSnackMove}
                 onPointerUp={onSnackUp}

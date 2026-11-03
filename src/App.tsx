@@ -126,6 +126,7 @@ export default function App() {
 
   // ---- feeding --------------------------------------------------------------------------------
   const tryFeed = (food: FoodId): boolean => {
+    if (!sceneRef.current?.isReady()) return false;
     if (preview !== null) return false;
     const b = busy();
     if (b === 'busy') {
@@ -518,7 +519,7 @@ export default function App() {
         <Stage
           t={t}
           sceneRef={sceneRef}
-          modelUrl={`${BASE}${STAGES[shownStage].model}`}
+          modelUrl={`${BASE}${STAGES[shownStage].model}?textures=external-v1`}
           stage={shownStage}
           mode={mode}
           setMode={setMode}

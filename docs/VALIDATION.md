@@ -1,208 +1,254 @@
-# Delivery validation · 2026-11-03
+# Pip texture repair validation · 2026-11-03
 
-This revision preserves the accepted game and addresses the two reopened findings: missing
-delivery evidence and unsafe backup timestamps. The scoped fixes are complete. This is a local
-worker report, not independent certification of the entire original brief. Real-model inference,
-physical devices and the platform's eventual deployed preview have not been validated.
+Implementation and local validation are complete. **Verification of the repaired public release is
+pending platform publication.** This is worker evidence, not independent certification. Physical
+phones and real browser-AI inference were not tested.
 
-## Reproduction and correction
+The existing warm cream game, all five owner-authored growth meshes and gameplay were preserved.
+The visual idea remains a golden 3D companion on a quiet stage with direct petting and feeding.
+No redesign, wallet, transaction, service, subscription or owner infrastructure change was added.
 
-| Finding | Evidence before the fix | Correction and recheck |
-| --- | --- | --- |
-| `7e6912aa7007721fff1d213393a6a7d2e8ca5175f230df95dcd1bb0473e8021f` · high · `README.md:44` in the reviewed version | The README referenced `docs/VALIDATION.md` and `docs/screenshots/`; neither existed. | Added this report, actual screenshots, check summaries and byte inventory. Updated the README to the results actually obtained in this revision. |
-| `bcbfd8aa3a649391b628af8cf844d5872d296bcca27582846dffdcd5e62f7bc7` · medium · `src/game/engine.ts:309` | Chromium at 390×844: uploaded a current backup with only `memories[0].at = 1e20`. The saved timestamp became `1e20`, `#root.innerHTML.length` became **0**, and a page error reported `RangeError: Invalid time value`. | One timestamp predicate now accepts only finite values in **0…8,640,000,000,000,000 ms**, the nonnegative portion of JavaScript's Date range. Applied to memories, creation/update/settlement timestamps, nullable action timestamps and cooldowns. `parseBackup` rejects invalid values before `doRestore` calls `commit`. Browser tests verify the existing saved string remains byte-for-byte unchanged, the error reads “That file is not a Pip backup.”, and Memories remains usable after reload. |
+## Root cause
 
-Before the engine change, the expanded save suite had **8 failing / 26** tests, reproducing the
-range gap. Afterwards all 26 passed, including the first invalid millisecond above the Date limit,
-the exact `1e20` report, negative memory time, other saved timestamp fields, and acceptance of
-memory times **0** and **8,640,000,000,000,000**. Existing valid saves and the save namespace remain
-compatible. The five meshes, game interface and integrations were not rebuilt in this revision.
+The defect was reproduced against **https://pip-squeekchain-hamster-com-edf1.imd.site/** with normal
+TLS in fresh Chromium 145, independently of localhost. [Public screenshot](screenshots/public-before.jpg),
+[actual response headers](public-response.json) and [repeatable browser evidence](public-reproduction.json)
+record the following:
+
+1. HTML and the actual Tiny bean GLB both returned HTTP 200. The model's MIME type was
+   `model/gltf-binary`; its SHA-256 was
+   `7a93e168ecd2a958c7e145dadfc1479e37d538d6e07ed7adc9bf65e42e5e925c`, matching the accepted
+   original asset. The installed mesh had 22,523 positions and authored normals. Meshopt decoding
+   and delivery of the renderer/geometry therefore worked.
+2. The HTML response allowed `img-src 'self' data: blob: https:` but specified
+   `connect-src 'self' https: wss:`. The same policy was returned on the GLB. Cache-Control was
+   `public, max-age=60`, with ETags and `X-Content-Type-Options: nosniff`.
+3. The console stated: “Connecting to 'blob:https://pip-squeekchain-hamster-com-edf1.imd.site/6ddc942b-f842-4292-b70f-89f9c464162b'
+   violates the following Content Security Policy directive: \"connect-src 'self' https: wss:\".
+   The action has been blocked.” Three blocked fetches were followed by three
+   `THREE.GLTFLoader: Couldn't load texture blob:…` errors. Browser policy-violation events
+   independently identified `connect-src` and `blob`.
+4. All three embedded images had valid WebP payloads. Passing their actual GLB buffer slices
+   directly into `createImageBitmap(new Blob(...))` decoded all three at **1024×1024 on the public
+   page**, under the same policy, without a URL fetch. Original image names ended in `.jpg`/`.png`,
+   but their declared MIME and RIFF/WEBP bytes correctly identified WebP. Bad encoding or missing
+   image bytes were not the cause.
+5. Three.js **0.170.0** uses `ImageBitmapLoader` on modern Chromium. `GLTFLoader.loadImageSource`
+   turns embedded bufferViews into object URLs; `ImageBitmapLoader` calls `fetch` on those URLs.
+   That uses **connect-src**, even though img-src allows blob images. `GLTFLoader.loadTextureImage`
+   catches rejection and returns null. The old scene called `onLoad(true)` anyway. Inspection of
+   the actual public mesh found **map, normalMap, roughnessMap and metalnessMap all absent** and
+   no loading/error message. This explains both the grey appearance and the misleading ready state.
+
+This identifies the loader/policy mismatch and swallowed texture failures with direct evidence.
+It does not attribute the failure to CSP merely because a CSP header exists. No policy was relaxed
+and certificate verification was never disabled. The original export had no missing renderer CDN:
+Three.js, GLTFLoader and MeshoptDecoder were bundled together, as they still are.
+
+## Repair and files changed
+
+| Source / assets | Implemented change |
+| --- | --- |
+| `public/models/*.glb`, fifteen sibling `*.webp` files | Extracted existing embedded images into relative URLs and removed their binary prefixes. Kept geometry, normals, UVs, compressed image bytes and material definitions. All corresponding files are in `dist/models/`. |
+| `scripts/externalize-textures.mjs:16` | Dependency-free, controlled-layout GLB conversion; idempotent for the delivered externalized files; refuses unfamiliar layouts. |
+| `scripts/compress-models.mjs` | Future regeneration ends with externalization, preventing the same embedded-image regression. |
+| `src/scene/modelIntegrity.ts:6` | Checks every mesh/material for decoded colour, normal, roughness and metalness images, correct colour spaces, UVs, authored normals and smooth PBR materials. A mesh alone cannot pass. |
+| `src/scene/PetScene.ts:176` | Request-specific loader/manager; rejects asset failures before installation, hides pending/failed models, isolates stale loads and disposes replaced models/ImageBitmaps. Existing shader deformation and lighting remain. |
+| `src/ui/Stage.tsx:139`, `src/i18n.ts:105` | Explicit loading/ok/failed state, aria-busy, persistent bilingual error with Retry, snacks disabled until validation succeeds. Chinese error is at `src/i18n.ts:342`. |
+| `src/App.tsx:129`, `src/App.tsx:522` | Refuses feeding before scene readiness; revision query avoids reuse of an old embedded GLB from the browser's 60-second cache during rollout. |
+| `tests/modelIntegrity.test.ts`, `tests/modelAssets.test.mjs` | Seventeen readiness/colour-space/normal tests and five actual-asset integrity tests. |
+| `scripts/check-textures.mjs`, `scripts/publication-policy.mjs` | Real browser material/image/framebuffer checks under the observed publication CSP, error injection, retry, previews, save isolation and post-publication verification. |
+| `scripts/check-export.mjs`, README, DESIGN, `docs/` | Complete export inventory, repeatable commands, final design documentation, labelled evidence and explicit publication status. |
+
+No existing package manifest, lockfile, Vite/TypeScript build configuration, chain configuration,
+AI implementation, game engine/save rules, animation poses, audio clips or other project was changed.
+The root package manifest and lockfile remain delivered unchanged. No submodule or dependency
+archive is included.
+
+## Artwork and normal preservation
+
+The authorised reference ZIP was downloaded read-only and its SHA-256 verified as
+`2c852405d0f488d75aa34841ba672772729ee3282206d8235432a8f553fc9144`.
+Its five source meshes have the same named authored materials and matching texture atlases.
+[Reference comparison](reference-comparison.json) records decoded RGB comparisons after resizing
+those larger source images to 1024: base-colour PSNR **39.58–40.32 dB**, normal-map PSNR
+**45.86–46.63 dB**. The accepted earlier export already used resized lossy WebP textures; this
+repair does not claim those are byte-identical to the larger reference images.
+
+Instead of recompressing artwork unnecessarily, this repair retains **every existing compressed
+image and Meshopt payload byte-for-byte**. [Integrity fingerprints](texture-integrity.json) were
+taken before extraction from the accepted commit. Five tests verify all fifteen image hashes,
+all twenty compressed geometry blocks (including OCTAHEDRAL normals), material definitions,
+counts, strides and compression modes. The existing 14-bit positions / 12-bit normals and UVs
+are unchanged. No normals were recalculated and no generic or grey substitute model was added.
+Base-colour maps are sRGB; normal/roughness/metalness maps are `NoColorSpace` data. Existing
+sRGB output, ACES filmic mapping, exposure 1.05 and warm scene lighting are preserved.
 
 ## Commands and actual results
 
-Dependencies were installed from the unchanged lockfile in a temporary mirror of the tracked
-source, outside the repository. The final production `dist/` was copied back unchanged and browser
-checks ran against that export in this repository. No dependency/cache directories are delivered.
-Tool versions: Node **24.21.0**, npm **11.19.0**, TypeScript **5.6.3**, Vite **5.4.21**, Vitest
-**2.1.9**, Playwright **1.58.2**, Chromium **145.0.7632.6**. Chromium used SwiftShader, a software
-WebGL renderer; this is not evidence of hardware GPU or phone performance.
+A clean `npm ci --cache /tmp/pip-npm-cache --no-audit --no-fund` installed the unchanged lockfile
+successfully (120 packages). Tools were Node **24.22.1**, npm **11.19.1**, TypeScript **5.6.3**,
+Vite **5.4.21**, Vitest **2.1.9** and external Playwright **1.58.2**.
 
-| Command | Actual outcome | Scope |
-| --- | --- | --- |
-| `npm ci` | Exit 0; 120 packages installed | Reproducible lockfile installation in the temporary source mirror |
-| `npm run typecheck` | Exit 0 | `tsc --noEmit` |
-| `npm test` | Exit 0; **43/43**, 4 suites | Engine/save 26, gestures 5, chat lifecycle 5, chain monitor 7 |
-| `npm run build` | Exit 0; 475 modules transformed | Typecheck plus Vite production export; the app chunk exceeds the configured 900 kB warning threshold. This nonfatal size warning remains. |
-| `SHOTS=docs/screenshots npm run e2e` | Exit 0; **48/48** | Fresh Chromium contexts; all external requests deliberately blocked; real local WebGL canvas and GLB assets |
-| `node .imd/reads/skills/design-critic/scripts/taste.mjs --out test/scratch/taste --offline` | Exit 0; **16/16** | Initial Care screen at 320, 390 and 1440; CSS reduced-motion check. The pinned probe is an assignment input, removed before submission. |
-| `node scripts/measure-delivery.mjs` | Exit 0; below **8,388,608 bytes** | Raw file inventory of the proposed submission, including source, export and evidence; see [exact final counts](delivery-sizes.json) |
-| `git diff --check` | Exit 0 | Whitespace/patch integrity |
+| Command | Actual result |
+| --- | --- |
+| `npm run build` | Exit 0; typecheck + Vite, 476 modules, complete `dist/`. Existing nonfatal >900 kB app-chunk warning remains. |
+| `npm run typecheck` | Exit 0 (`tsc --noEmit`). |
+| `npm test` | Exit 0; **60/60**, five suites: original 43 plus 17 material-readiness tests. |
+| `node --test tests/modelAssets.test.mjs` | Exit 0; **5/5** actual asset/payload integrity tests. |
+| `SHOTS=docs/screenshots node scripts/e2e.mjs` | Exit 0; **48/48** Chromium gameplay and responsive checks, with publication CSP. [Output](e2e-results.txt). |
+| `SHOTS=docs/screenshots REPORT=docs/texture-results.json node scripts/check-textures.mjs` | Exit 0; **98/98** across fresh Chromium **145.0.7632.6** and WebKit **26.0**. [Structured observations](texture-results.json). |
+| `node .imd/reads/skills/design-critic/scripts/taste.mjs --out test/scratch/taste --offline` | Exit 0; **16/16** on the final export at 320, 390, 1440 and reduced motion. [Probe output](design-probe.json). |
+| `node scripts/check-export.mjs` | Exit 0; **37** complete export files, **33** public assets matched byte-for-byte, five GLBs, fifteen images, eleven audio clips, relative URLs. [All hashes](export-integrity.json). |
+| `node scripts/check-textures.mjs --url https://pip-squeekchain-hamster-com-edf1.imd.site/ --legacy --browser chromium` | Exit 0; **4/4** public reproduction, direct embedded-image decoding and policy observations. Normal TLS 1.3; no insecure flags. |
+| Same public URL without `--legacy`, Chromium | Correctly refused the previous HTML: **canonical URL serves this export = false**. This is evidence publication is pending, not a repaired-public pass. |
+| `node scripts/measure-delivery.mjs` / `git diff --check` | Exit 0; final byte inventory in [delivery-sizes.json](delivery-sizes.json), below 8,388,608 bytes; no whitespace errors. |
 
-For the browser commands, `PLAYWRIGHT_MODULE` and `IMD_PLAYWRIGHT` pointed to the external
-Playwright installation; `PLAYWRIGHT_BROWSERS_PATH` pointed to its external browser directory.
-See the README for repeatable installation commands. The browser script owns its local HTTP
-server and closes it and the browser when finished. It does not publish anything.
+For browser commands, `PLAYWRIGHT_MODULE` / `IMD_PLAYWRIGHT` pointed to the external Playwright
+installation and `PLAYWRIGHT_BROWSERS_PATH` to its temporary browser directory. Chromium used
+SwiftShader. WebKit used Mesa software WebGL2. Missing Linux libraries were downloaded/extracted
+under `/tmp`; the temporary WebKit launcher was adjusted only to preserve their library search
+path. `PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS=1` skipped its ldconfig-based dependency
+preflight because those libraries were not installed system-wide; actual WebKit rendering and all
+material/pixel/interaction tests ran. Mesa/cache paths were temporary. This does not establish
+hardware-GPU performance. A separate optional WebKit HTTPS probe failed with the machine's
+network/TLS setup (“TLS support is not available”, then “WebKit encountered an internal error”);
+public reproduction is therefore claimed only for Chromium. No certificate bypass was attempted.
 
-The complete passing browser-check names and observations are retained in
-[e2e-results.txt](e2e-results.txt); the measured probe outputs are in
-[design-probe.json](design-probe.json). Neither establishes untested behavior.
+Screenshots were JPEG-optimized at quality 66 with MozJPEG to fit the submission limit, retaining
+all requested full-size labelled captures and all runtime assets. Their pixel dimensions are
+unchanged. No source/runtime artwork was downsampled for packaging.
 
-## Interaction coverage and limits
+## Browser regression coverage
 
-| Area | Actually exercised | Limits |
-| --- | --- | --- |
-| Rendering and stages | All five local GLBs loaded in a real WebGL scene. Feet coordinates hit the canvas above the meters; no script errors or failed local resources in the responsive contexts. Model bytes in `public/` and `dist/` match. | Stage switching uses the explicitly labelled preview; actual multi-day passage is covered by deterministic engine tests, not waiting 21 days. No physical-device performance measurement. |
-| Touch and turning | Browser: feet raycast response; keyboard nose tap, hold, stroke and three-tap surprise, with persisted surprise memory. Unit: tap, stroke, hold, triple tap, background rejection, cancelled/off-model drags, and turn-only behavior. | Gesture unit tests use synthetic hit tests. Physical touchscreen gestures and all six body regions with real touch hardware were not exercised. |
-| Feeding | Browser: off-mouth rejection, accepted drop at the animated mouth socket, nearby hint, one saved meal, eat clip, cooldown refusal, sleep refusal, keyboard Enter, failed-save refusal, and the eating lock while the scene is hidden. Unit: full/asleep/cooldown/unknown-food rejection. | Fullness rejection is a unit check, not a separate browser screenshot. No visual assessment of every animation frame or all snack/stage combinations. |
-| Priorities and repeated actions | Sleeping disables care; eating locks Nap until the clip ends. Leaving a memory round then starting seed hunt does not let an old callback unlock feeding. Repeated care cooldown, touch reward cap, elapsed growth and seven-day offline cap covered in engine tests. | The browser test starts/abandons games; it does not solve both games end-to-end or exhaustively test all possible interleavings. |
-| Persistence | Null wish, `1e20` memory date and Date-limit+1 backups rejected with identical saved bytes. Reload and reopening Memories work. Save-write failure refuses eating/rewards. | Legacy import was source-reviewed, not newly exercised against the owner's actual old save. No cross-origin storage access is claimed. |
-| Languages and layouts | English default; Traditional Chinese memory-card face, network line and simulated-event card. 320×640, 390×844, 768×1024 and 1440×900 have no horizontal page overflow and keep the model/feet on the first screen. Three simultaneous cards at 320 stay above snacks; their stack can scroll. | Viewport emulation is not a phone or native zoom test. The tab strip scrolls at 320. No native-language editorial review. |
-| Chain data | Browser with RPC blocked: both sources visibly Unavailable; rehearsal cards labelled Simulated rehearsal, with network labels. Unit: stable identity, deduplication across re-inclusion, reorg removal, wrong emitter/chain refusal, stale/unavailable states, backoff and stopping an in-flight poll. | Chain unit tests use a scripted RPC and recorded receipt fixtures. No new live settlement/request, real reorg or reconnection was observed in this revision. No rehearsal is evidence of a live event, reward or payout. |
-| Chat and sound | Chat state-machine tests below; source review of IME handling. User-enabled sound controls and loading logic reviewed in source. | No real inference, IME browser integration test, audio playback/listening, volume/ducking measurement or audio loading/cancellation test was performed in this revision. |
+The texture suite serves the **exact production export at `/preview/`** with the actual public CSP
+and nosniff header. Both browser contexts start without saved visitor data; no persistent visitor
+profile or real save is opened. The normal path requests fifteen relative WebP files successfully,
+with no relevant texture/decode/CSP/asset failures in either engine.
 
-The screenshot [390-first-screen.jpg](screenshots/390-first-screen.jpg) was inspected: Pip, Pet/Turn,
-the response to a direct touch, meters and snack actions are visible within 390×844. The [clean
-390 view](screenshots/390.jpg) also shows the model and snacks without a floating response. Other
-inspected screenshots include 320, 768 and 1440, Traditional Chinese, and the full rejected-restore
-page. [Screenshot index](screenshots/README.md) identifies all captures and their states.
+For **each of all five stages in each engine**, it checks four decoded maps at 1024×1024,
+material colour spaces, normals/vertex counts, flatShading=false, golden and dark pixels in the
+actual atlas **and in a freshly rendered WebGL framebuffer**, plus the expected stage label.
+These checks would fail on the original grey mesh even though its canvas and geometry exist.
+Labelled screenshots were visually inspected for golden/orange fur, white muzzle/belly, pink ears,
+dark eyes and smooth fur shading: [all stage captures](screenshots/README.md).
 
-## AI evidence and limitations
+Both engines also exercised rapid switching, preview save bytes remaining identical, returning
+to My Pip, direct feet petting, drag turning and actual snack drag/drop to the animated mouth.
+Material maps remain decoded and the installed smooth normal attribute/material remain unchanged
+while petting and nibbling. Phone-width **390×844** and desktop **1440×900** captures show Pip and
+its main actions; Chromium additionally checks 320×640 and 768×1024. There is no page overflow.
 
-**Mock lifecycle results:** the **five** tests in `tests/chat.test.ts` instantiate `ChatClient`
-with a scripted `MockWorker`. They verify progress, streaming/done, Stop and late-token isolation,
-Clear/Retry, replacement-worker isolation, explicit WASM backend retry, loading cancellation,
-empty-input refusal and refusal while already generating. The “Squeak!” test tokens are fixtures,
-not model output. These tests do not instantiate the real chat worker, download weights, compile
-WASM or execute a language model. The browser e2e suite blocks external traffic and never starts
-a model. The application's implementation uses the real runtime worker; there is no simulated
-chat fallback in the delivered game.
+Separate fresh contexts deliberately receive corrupt base-colour, normal and packed RM image
+responses, plus an HTTP 404 base-colour response. Each becomes **failed**, never ready, and cannot
+feed. English and Traditional Chinese messages explain Retry; keyboard Enter retries successfully
+with full maps and rendered colour, preserving save bytes. The Chinese retry focus ring was
+inspected in both browsers. Intentional failure injections are separate from the clean-load error
+assertions, so they are not hidden from a falsely empty error list.
 
-**Real-model results:** **not run**, for either WebGPU or WASM. First-download completion,
-real token streaming, actual model Stop responsiveness, model memory use, browser cache reuse,
-quality and language behavior therefore remain **untested**. Hardware WebGPU, Safari/WebKit,
-physical iPhone/Android and low-memory-device tests are also **untested**. Do not read the 43 unit
-tests, 48 browser checks or successful CDN downloads as real-inference certification.
-
-**Runtime availability and size probes:** HTTPS GETs with normal certificate validation (curl TLS
-verification result 0) returned HTTP 200 for the two configured runtime entry modules, the ONNX
-runtime entry and sampled WASM, and the WebLLM model library. Model file sizes below are from
-Hugging Face's file metadata API, not downloaded weight files or a completed browser load.
-No TLS bypass was used. Full external import-graph execution, CORS behavior in the worker and
-end-to-end model loading remain unverified.
-
-## Sizes
-
-All local counts are raw file bytes, not gzipped transfers or Git pack sizes. The production export
-is **3,409,761 bytes**. The [final inventory](delivery-sizes.json), regenerated by
-`node scripts/measure-delivery.mjs`, includes the report and all screenshots in the payload total.
-
-| Local runtime/export group | Bytes | Delivery |
-| --- | ---: | --- |
-| App JS (`index-CXoSYsvE.js`) | 909,531 | Bundled React, three.js, GLTFLoader, MeshoptDecoder and application code |
-| Chat worker (`worker-CDgOTjHG.js`) | 1,986 | Local worker entry; imports the optional remote AI runtimes only on request |
-| CSS (`index-CfeRa0Wv.css`) | 12,277 | Local stylesheet |
-| Five growth meshes | 1,661,640 | All in both `public/models/` and `dist/models/`; no mesh changed in this revision |
-| Eleven audio clips | 757,273 | All in both `public/audio/` and `dist/audio/` |
-| Remaining export (HTML, favicon, OG image) | 67,054 | Local static files |
-
-| Mesh filename | Bytes |
-| --- | ---: |
-| `01-tiny-bean.glb` | 329,556 |
-| `02-milk-mochi.glb` | 312,664 |
-| `03-curious-baby.glb` | 328,476 |
-| `04-lively-youngster.glb` | 336,692 |
-| `05-little-guardian.glb` | 354,252 |
-
-The source-side `public/` assets total **2,484,765 bytes**, deliberately retained alongside the
-export for rebuilding. `src/` totals **186,820 bytes**. Source, tests, manifests/lockfile,
-configuration, licenses, static export and screenshots are all counted in the final inventory.
-The inventory is conservative for the 8 MiB limit because it counts the complete working
-submission's raw files, including both source/public assets and their exported copies.
-
-| Optional external AI component | Observed bytes | Measurement and source |
-| --- | ---: | --- |
-| WebLLM 0.2.87 ESM entry | 6,175,660 | Downloaded [configured jsDelivr entry](https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.87/+esm) |
-| Transformers.js 3.7.6 ESM entry | 490,343 | Downloaded [configured jsDelivr entry](https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.7.6/+esm) |
-| ONNX Runtime Web ESM entry | 395,093 | Downloaded [versioned transitive entry](https://cdn.jsdelivr.net/npm/onnxruntime-web@1.22.0-dev.20250409-89f8206ba4/+esm) |
-| ONNX SIMD threaded JSEP WASM sample | 21,596,019 | Downloaded [runtime asset](https://cdn.jsdelivr.net/npm/onnxruntime-web@1.22.0-dev.20250409-89f8206ba4/dist/ort-wasm-simd-threaded.jsep.wasm); not an exhaustive runtime inventory |
-| WebLLM Qwen3 GPU model library | 6,561,594 | Downloaded [library used by the default model config](https://raw.githubusercontent.com/mlc-ai/binary-mlc-llm-libs/main/web-llm-models/v0_2_87/base/Qwen3-0.6B-q4f16_1_cs1k-webgpu.wasm) |
-| Qwen3 GPU parameter shards (9 files) | 335,372,288 | Sum of shard sizes in [model root metadata](https://huggingface.co/api/models/mlc-ai/Qwen3-0.6B-q4f16_1-MLC/tree/main?recursive=false&expand=false); no weight download |
-| Qwen3 ONNX `model_quantized.onnx` | 617,687,575 | q8 file in [pinned model revision metadata](https://huggingface.co/api/models/onnx-community/Qwen3-0.6B-ONNX/tree/58ca03a5e7b354b480b1a82b34bde8dc7b854cc0/onnx?recursive=false&expand=false); no weight download |
-
-These rows are separate files/groups, **not** a measured complete first-start transfer. Tokenizers,
-configuration, transitive modules and other runtime files also consume bandwidth/storage. The
-UI's approximately 360 MB GPU / 620 MB WASM notices are estimates, not totals measured by this
-revision. WASM weights use the explicit revision in `src/chat/model.ts`; the WebLLM default GPU
-weights and model library resolve through upstream `main`. The Transformers ESM entry imports
-an unversioned `onnxruntime-common` entry as well as a versioned ONNX Web entry. The entry runtime
-versions are pinned, but the entire external graph is not immutable. Availability may change.
-
-The request supplied a reference ZIP size of **32,869,746**, expanded size **69,745,062** and
-browser-AI runtime size **36,378,941 bytes**, with SHA-256
-`2c852405d0f488d75aa34841ba672772729ee3282206d8235432a8f553fc9144`.
-Those are **requester-supplied provenance figures**, not a ZIP download/hash repeated in this
-revision. No reference ZIP, dependency archive, registry mirror, package cache or `node_modules`
-is submitted. No required renderer, model or audio file was removed to reduce the payload.
-
-## Publication constraints and platform status
-
-The actual assignment limit is **8,388,608 bytes (8 MiB)** for the submission. A single sampled
-AI WASM file already exceeds it; the language-model weights exceed it many times over. The game
-therefore uses the existing explicitly documented **free client-side CDN runtime arrangement**:
-all renderer/game/model/audio files are local to the export; optional AI runtime libraries and
-weights load directly from public CDNs onto each visitor's device after an explicit start.
-No inference server, owner computer, API key, wallet transaction or paid storage is involved.
-The [third-party license directory](../licenses/) is retained. Internet access to the CDN/model
-origins is required for a first AI load; browser cache/storage and memory limits still apply.
-
-The static publisher must serve the **whole `dist/` tree**, including `assets/`, `models/`,
-`audio/`, favicon and OG image, with normal JavaScript/GLB MIME types and valid HTTPS. Vite uses
-`base: './'` and this is a single-page app without server-side routing. Local Chromium checks
-proved rendering with all external requests blocked; homepage HTTP 200 alone was not treated
-as acceptance. This run served the export at a local root URL; gateway-subpath deployment and
-production TLS were not independently exercised.
-
-**Canonical new job URL:** not supplied by the platform in this revision.
-**Canonical preview URL:** not supplied by the platform in this revision.
-**Repository hosting URL:** not supplied by the platform in this revision.
-
-The repository/export is the deliverable; IMD must supply the new job and preview identifiers
-after its publication step and verify the entire deployed export and normal TLS there. No
-additional platform per-file limit, path allowlist or deployment import result was supplied, so
-none is invented here. No publishing command, new paid order, automatic Genesis submission,
-DNS/VPS change, owner-site replacement or old review-record replacement was attempted. An eventual
-new preview URL is not evidence that an old Genesis VISIT link is repaired.
+The existing 48-check suite covers keyboard tap/hold/stroke/triple-tap, feet raycasts, feeding
+acceptance/rejection, nibbling locks, failed-save refusal, sleep, abandoned games, bilingual event
+cards, invalid backups and responsive placement. Unit suites cover elapsed growth, caps/cooldowns,
+save validation, chat lifecycle and chain monitoring. Both games, twelve reactions, audio, AI and
+read-only chain monitoring remain in source; no feature was removed to save bytes. End-to-end wins
+in both games, all twelve full animation sequences and audio listening were not newly exercised.
 
 ## Better Interface review
 
-Used the pinned workflow and core principles of all six domains. The accepted visual system was
-preserved; this revision changes validation and delivery evidence. The final design tokens,
-typography, components and breakpoints remain documented in [DESIGN.md](../DESIGN.md).
+Applied the pinned guide's workflow and core principles in all six domains while implementing,
+then inspected the finished export. Established tokens, typography, navigation and composition
+were preserved. Final implemented values and new load states are in [DESIGN.md](../DESIGN.md).
 
-| Domain | Coverage | Evidence and limits |
+| Domain | Coverage and applicable findings/fixes | Limits |
 | --- | --- | --- |
-| Accessibility | Checked, with limits | Native controls and labels in `src/ui/Stage.tsx:139`, `src/App.tsx:472`, keyboard alternatives, polite status at `src/App.tsx:536`, `:focus-visible` in `src/styles.css:77`. Keyboard gesture/Enter paths passed. Probe: all 26 first-screen controls meet its 24px/spacing rule; four are below its 44px comfort target. Full Tab/focus walk, screen-reader session, forced-colors and native 200% zoom **not performed**. |
-| Layout | Checked, with limits | Four responsive screenshots and no-overflow checks; model and snacks visible at 390; bounded three-card stack at 320. Desktop two-column layout and 768 single column inspected. RTL is not a supported locale and was not tested. Native zoom **not performed**. |
-| Writing | Checked | `src/i18n.ts:87` and `:324` provide the existing bilingual restore error. Browser observes English rejection, Traditional Chinese card/game/network labels, explicit Simulated rehearsal and unavailable-source language. No new wording invents a completed job or payout. Full native-language editorial review **not performed**. |
-| Typography | Checked, with limits | Five declared rem size tokens, one fallback stack, weights 400/600 and tabular counters. Probe sees three repeated sizes/four including the one-off heading on the initial screen; no tracking/casing/glyph failures. Actual fallback font availability on phones **not verified**. |
-| Colors | Checked, with limits | Existing semantic tokens retained. Probe's resolved solid-background text passes; the smallest measured ratio was **6.5:1** on the desktop tagline, `#65523f` against `#f7efe3`. **26 text boxes over canvas/gradients were excluded**; translucent-chip and image/gradient contrast is unmeasured. DESIGN.md's broader old contrast claim was narrowed to match the evidence. |
-| UI | Checked, with limits | First-screen actions, selected modes/tabs, sleeping/eating states, rejected-save state, card stack and recovery after restore/reload inspected. Probe reports no border+shadow stacking, `transition: all` or CSS animation left running under reduced motion. `src/scene/PetScene.ts:477` handles reduced 3D amplitude in source; this was not a full measured 3D-motion audit. Slow-motion replay and audio-state browser walk **not performed**. |
+| Accessibility — Checked | `Stage.tsx:139` exposes loading state; existing polite status now announces real texture failures. Native 44px Retry, keyboard activation and 3px focus ring were exercised. Snacks are disabled until safe to feed. Existing keyboard gesture path and reduced-motion CSS were checked. | No screen-reader session, physical touchscreen, native 200% zoom or full WCAG audit. |
+| Layout — Checked | Product, modes, meters and snacks are on the first 390 screen; 320/390/768/1440 regression screenshots inspected. Chinese error wraps without clipping. No probe overflow/overlap failures. | No RTL requirement; browser-native zoom untested. |
+| Writing — Checked | `i18n.ts:105,342` now names model/fur-texture loading, gives a connection/retry step and preserves the established English / Traditional Chinese vocabulary. No technical stack detail added to the game flow. | No native-language editorial review. |
+| Typography — Checked | Existing five-token scale, system fallback stack and 400/600 weights retained; normal casing and spacing. Error and button text stay readable in both locales. Probe: four first-screen sizes including one-offs, one family, two weights. | Platform fonts vary; no new font or exhaustive font-loading audit. |
+| Colors — Checked | All five authored colour atlases and data-map colour spaces verified in both engines; rendered golden/dark pixels and screenshots inspected. Probe's measured solid-background text pairs pass 4.5:1 / 3:1 thresholds. | Probe excludes 26 text boxes over canvas/gradients; no claim of measured contrast for every translucent chip or image background. No dark theme exists. |
+| UI — Checked | Persistent actionable failure replaces silent grey readiness; Retry returns to the fully textured state without moving unrelated content. Existing flat surfaces, radii, icons and motion retained. Probe **16/16**, zero unresolved first-screen findings. | No slowed Animations-panel or exhaustive hover-state audit; hardware performance untested. |
 
-All **16** probe checks passed: render, layout, targets, contrast, casing, tracking, eyebrows,
-type-sizes, type-faces, glyphs, slogans, repetition, copy-budget, chrome, motion and share. Passing
-the initial-screen probe does not extend its coverage to every tab or satisfy the limitations
-above. No additional visual-source change was justified by the scoped review. The screenshot
-capture now waits for the Chinese event card's entrance animation before saving its image.
+High finding 1: `PetScene.ts:176` previously declared readiness after GLTFLoader swallowed image
+errors. Fixed with external images, request-specific failure tracking and `modelIntegrity.ts:6`;
+98-check recheck passes. High finding 2: `Stage.tsx:142` could disappear over an untextured model;
+real failed state, bilingual recovery and disabled feeding now persist until a validated load.
+Rollout correction: `App.tsx:522` avoids cached embedded-model URLs. No unrelated design finding
+was used to widen the repair. Metadata (title, favicon, description, og:title and og:image) remains
+present and the referenced image/favicon are part of the complete export.
 
-Design guidance attribution: Jakub Krehel, Better Interface, commit
-`267330e1adfc66a718fb65fa6918c1f06d0a689e` (MIT); documentation method adapted from Paul Bakaus,
-Impeccable, commit `9d715cc4f5564a990ca8345abfdd5df6dc9b41c8` (Apache-2.0). The supplied notices
-and both license texts are preserved in [licenses/design-guidance.txt](../licenses/design-guidance.txt).
+## Sizes and publication limits
 
-## Completion boundary
+Raw file bytes, not compressed transfer or Git pack sizes:
 
-**Complete for this revision's two findings:** the crash is reproduced and fixed, regressions
-pass, the static export is rebuilt, and the previously missing report/screenshots are delivered.
-**Full original-product acceptance remains unverified** for real-model inference, physical-device
-coverage, the unperformed checks above and publication on a platform-supplied URL. These limits
-are not reported as passes or replaced with simulated evidence.
+| Runtime/export group | Bytes |
+| --- | ---: |
+| Complete `dist/`, 37 files | **3,411,153** |
+| Bundled app JS (Three.js, GLTFLoader, MeshoptDecoder, React and game) | 911,401 |
+| Local chat worker entry | 1,986 |
+| CSS | 12,277 |
+| Five GLB containers + compressed geometry | 1,267,000 |
+| Fifteen external WebP images | 394,162 |
+| Eleven original audio clips | 757,273 |
+| HTML, favicon and OG image | 67,054 |
+| Source-side `public/` assets, retained for rebuilds | 2,484,287 |
+
+| Stage | GLB bytes | GLB + its three WebPs |
+| --- | ---: | ---: |
+| Tiny bean | 255,788 | 329,454 |
+| Milk mochi | 246,944 | 312,560 |
+| Curious baby | 255,888 | 328,374 |
+| Lively youngster | 252,084 | 336,610 |
+| Little guardian | 256,296 | 354,164 |
+
+[delivery-sizes.json](delivery-sizes.json) counts the **entire working submission**, including
+source, unchanged manifest/lockfile, all public assets, complete export, tests, licenses, reports
+and required screenshots, conservatively against **8 MiB**. It has positive headroom. No runtime
+asset or feature was removed to meet it. No nested node_modules, npm registry/cache, source ZIP,
+Linux package archive or browser binary is submitted. No ignore file was changed. Rendering and
+textures work without a network CDN; optional AI and live chain reads retain their existing network
+requirements. No paid storage or service is needed to host this 3.25 MiB export.
+
+## AI evidence and limitations
+
+AI source and its two optional download paths are unchanged. Five chat tests use a scripted
+MockWorker, not a real model: progress, streaming/done, Stop, cancellation, retries and stale-worker
+isolation. Real WebGPU/WASM inference, weight downloads, cache reuse, output quality and IME
+integration were **not tested**. Existing estimates remain approximately 360 MB for GPU and 620 MB
+for WASM first downloads, from pinned jsDelivr runtime versions and Hugging Face weights. Those
+optional remote runtimes/weights were never local rendering dependencies and were not removed in
+this repair. The GPU model's upstream URL can follow main; not every transitive CDN import is pinned.
+
+Chain code/addresses are unchanged and read-only. Local browser checks deliberately block RPC;
+rehearsals remain labelled simulated and sources become unavailable. Monitor unit tests use
+fixtures. No new live request, settlement, reorg, wallet signature or transaction was performed.
+Audio files are byte-identical in the export; actual playback/listening was not tested. Physical
+Android/iPhone, mobile Safari, hardware WebGPU/WebGL and low-memory-device behavior are **untested**.
+WebKit here is a Linux engine check, not a physical iPhone test.
+
+## Publication status and repeatable final check
+
+**Canonical preview URL:** https://pip-squeekchain-hamster-com-edf1.imd.site/ . The project record
+says the platform publishes the next version under the same name. No new hostname/CID has been
+issued to this worker. At the final worker check, the canonical URL still returned the previous
+CID `bafybeicz43dmpzk7fcgswq4bwbjkpng3s7d7psdbrkdgqctxpibtfdf4oy` and the old HTML, verified
+under normal TLS. [Publication status](publication-status.json) records the old and repaired HTML
+hashes. The repaired release's public appearance, dependency delivery and clean console/network
+check are **pending**; the localhost pass is not substituted for them.
+
+After platform publication, run from this exact source/export with ordinary Playwright browser
+and system dependencies installed (see README):
+
+```sh
+PLAYWRIGHT_MODULE=/tmp/pip-check-tools/node_modules/playwright/index.mjs \
+PLAYWRIGHT_BROWSERS_PATH=/tmp/pip-check-browsers \
+SHOTS=/tmp/pip-published-shots REPORT=/tmp/pip-published-results.json \
+node scripts/check-textures.mjs --url https://pip-squeekchain-hamster-com-edf1.imd.site/
+```
+
+Use the actual new canonical URL if the platform supplies a different one. This check requires
+HTTPS, keeps certificate validation on, uses fresh contexts, rejects stale HTML, switches all five
+models, checks decoded maps and real frame pixels, exercises touch/turn/feed, detects relevant
+CSP/network/texture errors and compares **every one of the 37 exported files** to this `dist/`.
+Inspect the labelled screenshots; record the URL, CID, TLS information, file hashes and result.
+Only then can repaired-public validation be marked passed. Nothing in this job publishes to the
+owner's VPS/DNS, changes another game or submits a Genesis review.

@@ -1,0 +1,102 @@
+{
+  "date": "2026-11-03T16:28:22.690Z",
+  "target": "https://pip-squeekchain-hamster-com-edf1.imd.site/",
+  "legacy": true,
+  "browsers": [
+    {
+      "engine": "chromium",
+      "version": "145.0.7632.6"
+    }
+  ],
+  "checks": [
+    {
+      "name": "chromium: HTML response and policy observed",
+      "pass": true,
+      "detail": {
+        "status": 200,
+        "csp": "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: blob: https:; font-src 'self' data: https:; media-src 'self' data: blob: https:; connect-src 'self' https: wss:; frame-src https:; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
+        "tls": {
+          "issuer": "YR1",
+          "protocol": "TLS 1.3",
+          "subjectName": "*.imd.site",
+          "validFrom": 1793216719,
+          "validTo": 1800992718
+        }
+      }
+    },
+    {
+      "name": "chromium: old export material state observed (Chromium reproduces the defect)",
+      "pass": true,
+      "detail": {
+        "mesh": true,
+        "maps": {
+          "map": {
+            "present": false
+          },
+          "normalMap": {
+            "present": false
+          },
+          "roughnessMap": {
+            "present": false
+          },
+          "metalnessMap": {
+            "present": false
+          }
+        },
+        "rendered": {
+          "golden": 23,
+          "dark": 1578,
+          "opaque": 11732
+        },
+        "flatShading": false,
+        "vertices": 22523,
+        "normals": 22523,
+        "material": "71963414-f44b-46bc-a68d-840b55981d7c",
+        "message": null,
+        "stage": 0,
+        "label": "Tiny bean"
+      }
+    },
+    {
+      "name": "chromium: embedded WebP bytes decode directly without blob fetch",
+      "pass": true,
+      "detail": [
+        {
+          "format": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "format": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "format": "image/webp",
+          "width": 1024,
+          "height": 1024
+        }
+      ]
+    },
+    {
+      "name": "chromium: old policy behaviour observed (Chromium blocks blob fetches)",
+      "pass": true,
+      "detail": [
+        {
+          "directive": "connect-src",
+          "blocked": "blob"
+        },
+        {
+          "directive": "connect-src",
+          "blocked": "blob"
+        },
+        {
+          "directive": "connect-src",
+          "blocked": "blob"
+        }
+      ]
+    }
+  ],
+  "passed": 4,
+  "failed": 0
+}

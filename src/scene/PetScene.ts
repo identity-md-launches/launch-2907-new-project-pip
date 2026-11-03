@@ -7,6 +7,7 @@ import {
   type Landmarks, type Pose,
 } from './pose';
 import { PointerGestures, type GestureEvent } from './gestures';
+import { disposeModel, requireTexturedModel } from './modelIntegrity';
 
 export interface SceneCallbacks {
   onTouch(part: Part, gesture: Gesture): void;
@@ -103,7 +104,8 @@ export class PetScene {
   private ring: THREE.Mesh;
   private proximity = 0;
   private shadow: THREE.Mesh;
-  private loader: GLTFLoader;
+  private model: THREE.Object3D | null = null;
+  private ready = false;
   private loadToken = 0;
   private gestures: PointerGestures;
   private resizeObs: ResizeObserver;
@@ -151,8 +153,6 @@ export class PetScene {
     );
     this.ring.renderOrder = 10;
     this.scene.add(this.ring);
-    this.loader = new GLTFLoader();
-    this.loader.setMeshoptDecoder(MeshoptDecoder);
     this.gestures = new PointerGestures(canvas, {
       hit: (x, y) => this.hitPart(x, y),
       turn: (dx) => {
@@ -176,17 +176,29 @@ export class PetScene {
   load(stage: number, url: string) {
     const token = ++this.loadToken;
     this.stage = stage;
-    this.loader.load(
+    this.ready = false;
+    if (this.model) this.model.visible = false;
+    if (this.accessory) this.accessory.visible = false;
+    // Each request owns its loader/manager. A late failed texture from an abandoned stage
+    // must not poison the next stage or turn a failed decode into a successful callback.
+    const manager = new THREE.LoadingManager();
+    const failed: string[] = [];
+    manager.onError = (asset) => failed.push(asset);
+    const loader = new GLTFLoader(manager).setMeshoptDecoder(MeshoptDecoder);
+    loader.load(
       url,
       (gltf) => {
-        if (token !== this.loadToken) return;
-        let found: THREE.Mesh | null = null;
-        gltf.scene.traverse((o) => {
-          if (!found && (o as THREE.Mesh).isMesh) found = o as THREE.Mesh;
-        });
-        if (!found) return this.cb.onLoad(false, 'no mesh');
-        this.install(gltf.scene, found);
-        this.cb.onLoad(true);
+        if (token !== this.loadToken) return disposeModel(gltf.scene);
+        try {
+          if (failed.length) throw new Error(`Pip assets failed: ${failed.join(', ')}`);
+          const found = requireTexturedModel(gltf.scene);
+          this.install(gltf.scene, found);
+          this.ready = true;
+          this.cb.onLoad(true);
+        } catch (error) {
+          disposeModel(gltf.scene);
+          this.cb.onLoad(false, String((error as Error).message));
+        }
       },
       undefined,
       (err) => {
@@ -196,7 +208,9 @@ export class PetScene {
   }
 
   private install(sceneRoot: THREE.Object3D, mesh: THREE.Mesh) {
+    if (this.model) disposeModel(this.model);
     this.body.clear();
+    this.model = sceneRoot;
     const geo = mesh.geometry as THREE.BufferGeometry;
     const pos = geo.getAttribute('position') as THREE.BufferAttribute;
     const lm = findLandmarks(pos.array, pos.count, (i, c) => (c === 0 ? pos.getX(i) : c === 1 ? pos.getY(i) : pos.getZ(i)));
@@ -273,7 +287,7 @@ export class PetScene {
 
   /** Where the feet anchor projects, in client px (used by the layout tests). */
   feetScreen(): { x: number; y: number } | null {
-    if (!this.mesh || !this.landmarks) return null;
+    if (!this.ready || !this.mesh || !this.landmarks) return null;
     const v = this.mesh.localToWorld(this.deformed([0.5, 0.04, 0.8])).project(this.camera);
     const r = this.canvas.getBoundingClientRect();
     return { x: r.left + ((v.x + 1) / 2) * r.width, y: r.top + ((1 - v.y) / 2) * r.height };
@@ -281,6 +295,9 @@ export class PetScene {
 
   setMode(m: 'pet' | 'turn') {
     this.mode = m;
+  }
+  isReady() {
+    return this.ready;
   }
   setAsleep(a: boolean) {
     this.asleep = a;
@@ -383,7 +400,7 @@ export class PetScene {
 
   /** Ray-casts against the authored mesh. Returns null for background (no reward). */
   hitPart(clientX: number, clientY: number): { part: Part; point: THREE.Vector3 } | null {
-    if (!this.mesh || !this.landmarks) return null;
+    if (!this.ready || !this.mesh || !this.landmarks) return null;
     const r = this.canvas.getBoundingClientRect();
     const ndc = new THREE.Vector2(((clientX - r.left) / r.width) * 2 - 1, -((clientY - r.top) / r.height) * 2 + 1);
     const ray = new THREE.Raycaster();
@@ -400,6 +417,7 @@ export class PetScene {
 
   /** Simulated touch for keyboard users: same reaction path as a pointer touch. */
   touchPartByKey(part: Part, gesture: Gesture) {
+    if (!this.ready) return;
     if (this.landmarks) {
       const lm = this.landmarks;
       const u: Record<Part, [number, number, number]> = {
@@ -440,7 +458,7 @@ export class PetScene {
     return { x: r.left + ((v.x + 1) / 2) * r.width, y: r.top + ((1 - v.y) / 2) * r.height };
   }
   private mouthWorld(): THREE.Vector3 | null {
-    if (!this.mesh || !this.landmarks) return null;
+    if (!this.ready || !this.mesh || !this.landmarks) return null;
     return this.mesh.localToWorld(this.deformed(mouthOf(this.landmarks)));
   }
   setProximity(p: number) {
@@ -548,9 +566,12 @@ export class PetScene {
   }
 
   dispose() {
+    ++this.loadToken;
+    this.ready = false;
     cancelAnimationFrame(this.raf);
     this.resizeObs.disconnect();
     this.gestures.dispose();
+    if (this.model) disposeModel(this.model);
     this.renderer.dispose();
   }
 }
