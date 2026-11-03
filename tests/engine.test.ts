@@ -47,6 +47,9 @@ describe('saves', () => {
     ['unknown wish id', (d: any) => (d.state.wishes = [{ id: 'win', done: true }])],
     ['memory null', (d: any) => (d.state.memories = [null])],
     ['memory bad kind', (d: any) => (d.state.memories = [{ id: 'x', at: 1, kind: '<img>' }])],
+    ['memory timestamp 1e20', (d: any) => (d.state.memories[0].at = 1e20)],
+    ['memory timestamp beyond Date limit', (d: any) => (d.state.memories[0].at = 8_640_000_000_000_001)],
+    ['negative memory timestamp', (d: any) => (d.state.memories[0].at = -1)],
     ['cooldown string', (d: any) => (d.state.cooldowns = { brush: 'soon' })],
     ['cooldown unknown key', (d: any) => (d.state.cooldowns = { hack: 1 })],
     ['bad day', (d: any) => (d.state.day = 'x')],
@@ -56,6 +59,25 @@ describe('saves', () => {
     mutate(d);
     expect(parseBackup(JSON.stringify(d))).toBeNull();
     expect(validate(d.state)).toBeNull();
+  });
+  it.each(['createdAt', 'settledAt', 'updatedAt', 'lastFedAt', 'lastPetRewardAt', 'lastGameRewardAt'])(
+    'rejects an out-of-range %s timestamp', (field) => {
+      const d = good();
+      d.state[field] = 1e20;
+      expect(parseBackup(JSON.stringify(d))).toBeNull();
+    },
+  );
+  it('rejects an out-of-range cooldown timestamp', () => {
+    const d = good();
+    d.state.cooldowns.brush = 1e20;
+    expect(parseBackup(JSON.stringify(d))).toBeNull();
+  });
+  it.each([0, 8_640_000_000_000_000])('accepts the supported memory timestamp boundary %s', (at) => {
+    const d = good();
+    d.state.memories[0].at = at;
+    const restored = parseBackup(JSON.stringify(d));
+    expect(restored?.memories[0].at).toBe(at);
+    expect(() => new Date(restored!.memories[0].at).toISOString()).not.toThrow();
   });
   it('a failed save reports false so callers never apply or reward', () => {
     const broken: KV = { getItem: () => null, setItem: () => { throw new Error('QuotaExceeded'); } };

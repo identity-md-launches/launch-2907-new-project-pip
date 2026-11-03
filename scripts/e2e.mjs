@@ -269,24 +269,39 @@ try {
     await page.getByRole('button', { name: '模擬一個請求' }).click();
     const chain = await page.locator('.card-chain').first().innerText();
     check('zh: card network label is translated', /主網/.test(chain), chain);
-    if (SHOTS) await page.evaluate(() => scrollTo(0, 0)), await page.screenshot({ path: `${SHOTS}/390-zh.jpg`, quality: 78 });
+    if (SHOTS) {
+      await page.evaluate(() => scrollTo(0, 0));
+      await page.waitForTimeout(300); // capture the settled card, after its entrance animation
+      await page.screenshot({ path: `${SHOTS}/390-zh.jpg`, quality: 78 });
+    }
     await ctx.close();
   }
 
-  // ---- malformed backup is refused --------------------------------------------------------------
+  // ---- malformed backups never overwrite the save or break Memories -----------------------------
   {
-    const { ctx, page } = await open(390, 844);
+    const { ctx, page, errors } = await open(390, 844);
     await tab(page, 'Pip');
     const raw = await page.evaluate(() => localStorage.getItem('pip-rebuild-save-v1'));
-    const state = raw ? JSON.parse(raw) : await page.evaluate(() => null);
-    const bad = JSON.stringify({ format: 'pip-rebuild-save', version: 1, state: { ...(state || {}), version: 1, wishes: [null] } });
-    await page.locator('input[type=file]').setInputFiles({ name: 'bad.json', mimeType: 'application/json', buffer: Buffer.from(bad) });
-    await page.waitForTimeout(200);
-    const t = await toast(page);
+    for (const [name, mutate] of [
+      ['null wish', (state) => { state.wishes = [null]; }],
+      ['memory timestamp 1e20', (state) => { state.memories[0].at = 1e20; }],
+      ['memory timestamp beyond Date limit', (state) => { state.memories[0].at = 8_640_000_000_000_001; }],
+    ]) {
+      const state = JSON.parse(raw);
+      mutate(state);
+      const bad = JSON.stringify({ format: 'pip-rebuild-save', version: 1, state });
+      await page.locator('input[type=file]').setInputFiles({ name: `${name}.json`, mimeType: 'application/json', buffer: Buffer.from(bad) });
+      await page.waitForTimeout(200);
+      const t = await toast(page);
+      const saved = await page.evaluate(() => localStorage.getItem('pip-rebuild-save-v1'));
+      check(`${name}: restore refused and saved bytes unchanged`, /not a Pip backup/.test(t) && saved === raw && (await page.locator('#root').innerHTML()).length > 100, t);
+    }
+    if (SHOTS) await page.screenshot({ path: `${SHOTS}/390-restore-rejected.jpg`, quality: 78, fullPage: true });
+    await page.reload();
+    await page.waitForFunction(() => !document.querySelector('.stage-msg') && !!window.__pip?.feetScreen());
+    await tab(page, 'Pip');
+    check('Memories remains usable after rejected restore and reload', (await page.locator('.memories time').count()) > 0 && errors.length === 0, errors.join('; '));
     await tab(page, 'Care');
-    const ok = (await page.locator('#root').innerHTML()).length > 100;
-    const saved = await page.evaluate(() => localStorage.getItem('pip-rebuild-save-v1'));
-    check('malformed backup refused; game stays usable', /not a Pip backup/.test(t) && ok && !/\[null\]/.test(saved || ''), t);
     await ctx.close();
   }
 

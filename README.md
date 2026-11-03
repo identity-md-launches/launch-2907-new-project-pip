@@ -10,7 +10,7 @@ works from a gateway subpath or an ENS name. No server, backend, wallet or paid 
 
 ## Install, preview, rebuild
 
-Requires Node 20+ (checked with Node 24.22, npm 11.19).
+Requires Node 20+ (this revision checked with Node 24.21.0, npm 11.19.0).
 
 ```sh
 npm ci                 # install exact versions from package-lock.json
@@ -23,8 +23,15 @@ npm run e2e            # Chromium checks against dist/ (needs Playwright, see be
 ```
 
 `npm run e2e` serves `dist/` locally and drives Chromium through Playwright. Playwright is not a
-site dependency; provide it once with `npm i -D playwright && npx playwright install chromium`,
-or point `PLAYWRIGHT_MODULE` at an existing `playwright/index.mjs`. `SHOTS=docs/screenshots npm run e2e`
+site dependency; install the check tools outside the repository:
+
+```sh
+npm install --prefix /tmp/pip-check-tools playwright@1.58.2
+PLAYWRIGHT_BROWSERS_PATH=/tmp/pip-check-browsers /tmp/pip-check-tools/node_modules/.bin/playwright install chromium
+PLAYWRIGHT_MODULE=/tmp/pip-check-tools/node_modules/playwright/index.mjs PLAYWRIGHT_BROWSERS_PATH=/tmp/pip-check-browsers npm run e2e
+```
+
+Or point `PLAYWRIGHT_MODULE` at an existing `playwright/index.mjs`. `SHOTS=docs/screenshots npm run e2e`
 also rewrites the screenshots in `docs/screenshots/`.
 
 ## Project layout
@@ -41,7 +48,7 @@ also rewrites the screenshots in `docs/screenshots/`.
 | `public/audio/` | Music and effect clips |
 | `tests/` | Vitest suites and recorded public receipts used as fixtures |
 | `scripts/e2e.mjs` | Browser interaction checks against the export |
-| `docs/VALIDATION.md` | Test results, Better Interface review, sizes, limitations |
+| [docs/VALIDATION.md](docs/VALIDATION.md) | Test results, Better Interface review, sizes, limitations |
 | `docs/screenshots/` | Screenshots taken by `scripts/e2e.mjs` |
 | `docs/chain/` | Chain deployment provenance records |
 | `licenses/` | Third-party licenses |
@@ -67,7 +74,10 @@ Inference runs in a Web Worker on the visitor's device. WebGPU uses WebLLM
 (`@mlc-ai/web-llm@0.2.87`, `Qwen3-0.6B-q4f16_1-MLC`, about 360 MB first download); the explicit
 WASM compatibility retry uses transformers.js (`@huggingface/transformers@3.7.6`,
 `onnx-community/Qwen3-0.6B-ONNX` at a pinned revision, about 620 MB). Both runtimes come from
-pinned jsDelivr URLs and the weights from Hugging Face, then the browser caches them. They are
+pinned jsDelivr entry URLs and the weights from Hugging Face, then the browser caches them. The
+WebLLM default GPU model URL follows upstream `main`; not every transitive CDN import is pinned.
+Runtime availability probes and mocked lifecycle checks do **not** establish real inference. See
+[the separate AI evidence and limitations](docs/VALIDATION.md#ai-evidence-and-limitations). They are
 not bundled into `dist/`: the WASM runtime alone is 36,378,941 bytes in the reference ZIP, and
 the weights are hundreds of MB, far beyond the 8 MiB submission budget. See
 `docs/VALIDATION.md` § Sizes. Nothing runs on a server and no API key exists.
@@ -81,5 +91,8 @@ what the platform must still confirm (URL, TLS).
 
 ## Validation
 
-The latest run (2026-11-03): `npm run build` passes (typecheck + Vite), `npm test` 31/31,
-`npm run e2e` 45/45, design probe 16/16. Details and limitations are in `docs/VALIDATION.md`.
+The latest run (2026-11-03): `npm run build` passes (typecheck + Vite), `npm test` 43/43,
+`npm run e2e` 48/48, design probe 16/16. These are local worker results. Real-model GPU/WASM
+inference, physical phones and a deployed platform preview remain untested. See
+[the delivery report](docs/VALIDATION.md) and [screenshots](docs/screenshots/README.md).
+Run `node scripts/measure-delivery.mjs` for current source/export/payload byte counts.

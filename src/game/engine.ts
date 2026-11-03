@@ -304,12 +304,17 @@ export function equip(s0: PipState, accessory: AccessoryId | null, now: number):
 // ---- validation and migration -------------------------------------------------------------
 
 const isNum = (x: unknown): x is number => typeof x === 'number' && Number.isFinite(x);
-const isTime = (x: unknown) => x === null || isNum(x);
+// Persisted dates must survive Date#toISOString in the Memories renderer. Finite numbers can
+// still be outside JavaScript's supported Date range (for example, an edited backup with 1e20).
+const isTimestamp = (x: unknown): x is number => isNum(x) && x >= 0 && x <= 8_640_000_000_000_000;
+const isTime = (x: unknown) => x === null || isTimestamp(x);
 
 export function validate(x: unknown): PipState | null {
   const d = x as PipState;
   if (!d || typeof d !== 'object' || d.version !== 1) return null;
-  for (const k of ['createdAt', 'settledAt', 'growthMs', 'updatedAt', 'bond', 'energy', 'fullness', 'bondToday', 'meals'] as const)
+  for (const k of ['createdAt', 'settledAt', 'updatedAt'] as const)
+    if (!isTimestamp(d[k])) return null;
+  for (const k of ['growthMs', 'bond', 'energy', 'fullness', 'bondToday', 'meals'] as const)
     if (!isNum(d[k]) || d[k] < 0) return null;
   if (d.bond > 100 || d.energy > 100 || d.fullness > 100) return null;
   if (typeof d.asleep !== 'boolean' || !isTime(d.lastFedAt) || !isTime(d.lastPetRewardAt) || !isTime(d.lastGameRewardAt)) return null;
@@ -327,12 +332,12 @@ export function validate(x: unknown): PipState | null {
   if (d.memories.length > 30) return null;
   for (const m of d.memories as unknown[]) {
     const x = m as { id?: unknown; at?: unknown; kind?: unknown };
-    if (!x || typeof x !== 'object' || typeof x.id !== 'string' || x.id.length > 80 || !isNum(x.at) || x.at < 0) return null;
+    if (!x || typeof x !== 'object' || typeof x.id !== 'string' || x.id.length > 80 || !isTimestamp(x.at)) return null;
     if (typeof x.kind !== 'string' || !MEMORY_KIND.test(x.kind)) return null;
   }
   if (d.accessory !== null && !['bow', 'scarf', 'leaf', 'star'].includes(d.accessory)) return null;
   if (!d.cooldowns || typeof d.cooldowns !== 'object' || Array.isArray(d.cooldowns)) return null;
-  for (const [k, v] of Object.entries(d.cooldowns)) if (!(k in RULES.care) || !isNum(v) || v < 0) return null;
+  for (const [k, v] of Object.entries(d.cooldowns)) if (!(k in RULES.care) || !isTimestamp(v)) return null;
   if (d.importedFrom !== null && d.importedFrom !== undefined && typeof d.importedFrom !== 'string') return null;
   return d;
 }

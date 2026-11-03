@@ -1,0 +1,50 @@
+PASS  390: feet anchor is on the canvas (not under meters) — feet y=390.8
+PASS  390: feet sit above the meters — meters top=428.2
+PASS  390: tapping the feet gives a feet response — You touched Pip’s feet.
+PASS  first touch saved a bond reward — bond 10→11
+PASS  stage 1: model loads and feet are touchable — feet y=409.8 hit=CANVAS
+PASS  stage 2: model loads and feet are touchable — feet y=409.8 hit=CANVAS
+PASS  stage 3: model loads and feet are touchable — feet y=406.1 hit=CANVAS
+PASS  stage 4: model loads and feet are touchable — feet y=405.1 hit=CANVAS
+PASS  stage 5: model loads and feet are touchable — feet y=407.9 hit=CANVAS
+PASS  no page errors or failed local resources (390)
+PASS  key 3 taps the nose — You touched Pip’s nose.
+PASS  T plays the three-tap surprise
+PASS  surprise memory saved
+PASS  H holds the chosen head (nuzzle)
+PASS  S strokes the chosen part
+PASS  drop away from the mouth is rejected
+PASS  drop on the live mouth socket feeds once — hint while near: "Drop at the mouth"
+PASS  eat clip plays
+PASS  hidden tab: Nap stays locked while the eat clip is unfinished
+PASS  lock releases when the eat clip ends
+PASS  second meal during cooldown is refused — Pip needs a moment (38s).
+PASS  failed save: refused with a message and no eating — Could not save, so nothing changed. Check that this browser allows site storage.
+PASS  asleep: feeding refused — Pip is asleep. Wake Pip first.
+PASS  asleep: care buttons disabled
+PASS  seed hunt keeps feeding blocked after an abandoned memory round — Pip is busy right now.
+PASS  320: three cards stay above the meters/snacks — {"cardsBottom":326,"bottomTop":330.3125,"scrollable":true,"n":3}
+PASS  320: snacks are not covered by cards
+PASS  rehearsal cards are labelled simulated — Simulated rehearsal,Simulated rehearsal,Simulated rehearsal
+PASS  blocked RPC shows sources as unavailable, not live — Unavailable,Unavailable
+PASS  zh: revealed memory card is translated — 卡片 1: 莓果
+PASS  zh: network line is translated — 以太坊主網 · 鏈 1 · 0xa43e6f…30de82
+PASS  zh: card network label is translated — 以太坊主網 · 鏈 1
+PASS  null wish: restore refused and saved bytes unchanged — That file is not a Pip backup.
+PASS  memory timestamp 1e20: restore refused and saved bytes unchanged — That file is not a Pip backup.
+PASS  memory timestamp beyond Date limit: restore refused and saved bytes unchanged — That file is not a Pip backup.
+PASS  Memories remains usable after rejected restore and reload
+PASS  320: no horizontal overflow — {"sw":320,"cw":320}
+PASS  320: feet touchable on first screen
+PASS  320: no errors
+PASS  390: no horizontal overflow — {"sw":390,"cw":390}
+PASS  390: feet touchable on first screen
+PASS  390: no errors
+PASS  768: no horizontal overflow — {"sw":768,"cw":768}
+PASS  768: feet touchable on first screen
+PASS  768: no errors
+PASS  1440: no horizontal overflow — {"sw":1440,"cw":1440}
+PASS  1440: feet touchable on first screen
+PASS  1440: no errors
+
+48/48 checks passed

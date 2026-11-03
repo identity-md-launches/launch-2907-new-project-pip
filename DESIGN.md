@@ -33,8 +33,9 @@ All tokens are CSS custom properties on `:root` in `src/styles.css`.
 | `--focus` | `#1a5fb4` | 3px focus ring on `:focus-visible` |
 
 The stage background is a radial gradient `#fff8ee → #f3e3cc → #ead6b9` (`.stage`). The design
-probe measured all text outside the canvas/gradient at 4.5:1 or better; text over the stage
-gradient sits on `--surface` chips.
+probe's resolved solid-background samples passed (lowest measured ratio 6.5:1 on the tagline).
+It excluded 26 text boxes over canvas/gradients; those pairs are unmeasured, including translucent
+stage chips. See [the review coverage](docs/VALIDATION.md#better-interface-review).
 
 ## Typography
 
