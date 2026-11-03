@@ -1,0 +1,86 @@
+{
+  "checkedAt": "2026-10-31",
+  "referenceCommit": "b3f4b1ffee5121984de2ea349fce3a36919ede3c",
+  "sources": {
+    "IMD": "https://imd.fun/docs/",
+    "IMDCapabilities": "https://api.imd.fun/requests/capabilities",
+    "IMDVerifiedABI": "https://eth.blockscout.com/api/v2/smart-contracts/0xa43e6f75ee006411f79ac1c84120606c2330de82",
+    "IMDDeploymentTransaction": "https://etherscan.io/tx/0x75acc7ce4cdddeff526a9a6aa40e5dbebfe8608e1e6576bcb6e4f640a6fc90db",
+    "Squeekchain": "https://docs.squeekchain.com/developers/",
+    "SqueekDeployment": "https://docs.squeekchain.com/assets/deployments/sepolia.json",
+    "SqueekABI": "https://docs.squeekchain.com/assets/abi/SqueekCore.json",
+    "IndexSemantics": "https://docs.squeekchain.com/developers/index-events/"
+  },
+  "IMD": {
+    "chainId": 1,
+    "address": "0xa43e6f75ee006411f79ac1c84120606c2330de82",
+    "version": 2,
+    "kind": "non-proxy",
+    "implementation": "not applicable: deployed runtime checked directly",
+    "startBlock": 26164897,
+    "headLagBlocks": 3,
+    "event": "Requested(bytes32,address,bytes32,bytes,address,bytes4,address,uint256)",
+    "topicIndexing": [
+      "requestId",
+      "payer",
+      "action"
+    ],
+    "runtimeHash": "0xdf76139e1b7dfe05bdf55e48e65076e4763a40d470fcf5da58034a488e30bdaf"
+  },
+  "Squeekchain": {
+    "chainId": 11155111,
+    "hostNetwork": "Sepolia testnet",
+    "address": "0x74665dAecA35A2303e767E76a2FF1FB6F93e119f",
+    "kind": "EIP-1967 transparent proxy",
+    "implementation": "0x0a71c86ab63a77675002a389fdf4d096a07b11e2",
+    "version": 3,
+    "runtimeHash": "0xe8a5a5aa913141ddd8951cf9fcc1375044b541773e5b0bf8ee04a5c7ac2d194d",
+    "startBlock": 11902282,
+    "headLagBlocks": 12,
+    "event": "BatchSettled(bytes32,address,uint64,uint256,uint64,uint16,uint64,uint96)",
+    "topicIndexing": [
+      "digest",
+      "reporter",
+      "settledThroughRound"
+    ],
+    "derivedBlocks": "floor(cumulativeBlockUnits / 1000000000) delta; BatchSettled advances the frontier even for activeRoundCount=0"
+  },
+  "ABI_SHA256": {
+    "Intake.json": "8dc80498ae23b30dc34da3831cd038aeaa1940c66faeafab8ddbaf672b913062",
+    "SqueekCore.json": "25a3a435a1ac086185d4c57fc5164f5c9dc6a04a3e8b83cfc104c7f23bb40025"
+  },
+  "policy": {
+    "pollMs": 20000,
+    "maxBlockRange": 96,
+    "maxCatchupBlocks": 512,
+    "maxLogsPerRead": 64,
+    "cursorCheckpoints": 16,
+    "maxHistoryPerSource": 12,
+    "maxSeenIdentitiesPerSource": 256,
+    "maxQueuedFamilies": 3,
+    "maxEventsPerGroup": 12,
+    "minCelebrationCooldownMs": 15000,
+    "maxBackoffMs": 300000,
+    "cardLifetimeMs": 8000,
+    "canonicalOccurrence": [
+      "chainId",
+      "blockHash",
+      "transactionHash",
+      "logIndex"
+    ],
+    "replayIdentity": [
+      "chainId",
+      "transactionHash",
+      "transaction-relative log ordinal from receipt"
+    ],
+    "pausedWhenHidden": true,
+    "initialHistoryPlayback": false
+  },
+  "trustAndLimits": [
+    "Public RPC trust: this is not a consensus light client.",
+    "Unknown SqueekCore implementation/code or Intake code mismatch stops projection.",
+    "The monitor verifies the Core proxy and implementation; it does not independently audit the entire mining/NFT/governance graph.",
+    "Provider failures and read restrictions are displayed as unavailable; no fabricated live fallback.",
+    "Actual live-read and recorded-receipt conditions are documented in artifacts/validation.md."
+  ]
+}
